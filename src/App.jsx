@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import './App.css'
+
 
 // ── Icons ──────────────────────────────────────────────────────
 function GithubIcon({ size=16 }) {
@@ -14,68 +15,82 @@ function TableauIcon({ size=16 }) {
 
 // ── Decorative landing data viz ────────────────────────────────
 function LandingViz() {
-  const scatter = Array.from({length:40}, (_,i) => ({
-    x: 10 + Math.sin(i*0.7)*38 + i*2.2,
-    y: 30 + Math.cos(i*0.5)*28 + i*0.8,
-    r: 2 + (i%5)*1.2,
-    op: 0.08 + (i%4)*0.05
-  }))
   const bars = [55,72,41,88,63,95,50,78,34,82,60,91]
-  const lineW = 900, lineH = 120
-  const pts = bars.map((v,i) => `${60+i*70},${lineH - v*1.1}`).join(' ')
+  const sparkPts = bars.map((v,i)=>`${110+i*70},${510-v*1.0}`).join(' ')
+  const sparkLen = 900
+
+  const edges = [[500,300,380,200],[500,300,620,200],[500,300,480,440],
+    [500,300,640,380],[500,300,360,380],[380,200,260,120],[620,200,740,120]]
+  const nodes = [[500,300],[380,200],[620,200],[480,440],[640,380],[360,380],[260,120],[740,120]]
 
   return (
     <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
-      {/* scatter cloud left */}
-      {scatter.map((d,i) => (
-        <circle key={i} cx={d.x*2.5} cy={d.y*4} r={d.r} fill="#4A78A8" opacity={d.op}/>
-      ))}
-      {/* scatter cloud right */}
-      {scatter.map((d,i) => (
-        <circle key={`r${i}`} cx={1000-d.x*2.5} cy={d.y*4} r={d.r} fill="#2F4156" opacity={d.op*0.8}/>
-      ))}
-      {/* bar chart bottom center */}
+      <defs>
+        <style>{`
+          @keyframes floatA{0%,100%{transform:translate(0,0)}33%{transform:translate(4px,-7px)}66%{transform:translate(-5px,4px)}}
+          @keyframes floatB{0%,100%{transform:translate(0,0)}40%{transform:translate(-6px,5px)}70%{transform:translate(5px,-4px)}}
+          @keyframes drawLine{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+          @keyframes nodeFade{from{opacity:0}to{opacity:1}}
+          @keyframes edgeDraw{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+        `}</style>
+      </defs>
+
+
+      {/* bar chart — fades in */}
       {bars.map((h,i) => (
-        <rect key={i} x={300+i*36} y={560-h*0.7} width="28" height={h*0.7}
-          rx="3" fill="#4A78A8" opacity={0.08+i*0.012}/>
+        <rect key={i}
+          x={300+i*36} y={560-h*0.7} width="28" height={h*0.7} rx="3"
+          fill="#4A78A8" opacity={0.06+i*0.007}
+          style={{animation:`nodeFade 0.4s ease ${1.2+i*0.05}s both`}}
+        />
       ))}
-      {/* sparkline */}
-      <polyline points={pts.split(' ').map(p => { const [x,y]=p.split(','); return `${+x+50},${+y+390}` }).join(' ')}
-        fill="none" stroke="#2F4156" strokeWidth="1.5" opacity="0.1" strokeLinecap="round"/>
-      {/* network lines */}
-      {[[500,300,380,200],[500,300,620,200],[500,300,480,440],[500,300,640,380],
-        [500,300,360,380],[380,200,260,120],[620,200,740,120]].map(([x1,y1,x2,y2],i) => (
-        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#4A78A8" strokeWidth="1" opacity="0.1"/>
+
+      {/* self-drawing sparkline */}
+      <polyline
+        points={sparkPts}
+        fill="none" stroke="#2F4156" strokeWidth="1.2"
+        strokeLinecap="round" strokeLinejoin="round"
+        opacity="0.07"
+        strokeDasharray={sparkLen}
+        strokeDashoffset={sparkLen}
+        style={{animation:`drawLine 2.2s cubic-bezier(0.4,0,0.2,1) 0.6s forwards`}}
+      />
+
+      {/* network edges — draw in staggered */}
+      {edges.map(([x1,y1,x2,y2],i) => (
+        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+          stroke="#4A78A8" strokeWidth="0.8" opacity="0.11"
+          strokeDasharray="300" strokeDashoffset="300"
+          style={{animation:`edgeDraw 0.6s ease ${0.5+i*0.12}s forwards`}}
+        />
       ))}
-      {[[500,300],[380,200],[620,200],[480,440],[640,380],[360,380],[260,120],[740,120]].map(([cx,cy],i) => (
-        <circle key={i} cx={cx} cy={cy} r={i===0?8:5} fill="#4A78A8" opacity={i===0?0.15:0.1}/>
+
+      {/* network nodes — fade in */}
+      {nodes.map(([cx,cy],i) => (
+        <circle key={i} cx={cx} cy={cy}
+          r={i===0?6:4}
+          fill="#4A78A8" opacity={i===0?0.14:0.09}
+          style={{animation:`nodeFade 0.4s ease ${0.4+i*0.1}s both`}}
+        />
       ))}
-      {/* circle arcs */}
-      <circle cx="500" cy="300" r="160" fill="none" stroke="#2F4156" strokeWidth="0.8" opacity="0.07" strokeDasharray="6 10"/>
-      <circle cx="500" cy="300" r="240" fill="none" stroke="#4A78A8" strokeWidth="0.8" opacity="0.05" strokeDasharray="4 14"/>
+
+      {/* dashed arcs */}
+      <circle cx="500" cy="300" r="160" fill="none" stroke="#2F4156" strokeWidth="0.6"
+        opacity="0.06" strokeDasharray="6 10"
+        style={{animation:`nodeFade 1s ease 1.4s both`}}/>
+      <circle cx="500" cy="300" r="240" fill="none" stroke="#4A78A8" strokeWidth="0.6"
+        opacity="0.05" strokeDasharray="4 14"
+        style={{animation:`nodeFade 1s ease 1.6s both`}}/>
     </svg>
   )
 }
 
 // ── SVG project thumbnails ─────────────────────────────────────
 function ThumbFraud() {
-  const bars=[38,72,45,91,60,55,80,42,67,88,50,75,95,62,48]
-  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
-    <rect width="220" height="140" fill="#EDE8E3"/>
-    {bars.map((h,i)=><rect key={i} x={6+i*14} y={140-h} width="11" height={h} rx="2" fill={h>80?'#2F4156':'#4A78A8'} opacity={h>80?0.85:0.45}/>)}
-    {[0.3,0.6,0.9].map((v,i)=><line key={i} x1="0" y1={140-v*110} x2="220" y2={140-v*110} stroke="#C4BAA2" strokeWidth="0.8"/>)}
-    <text x="8" y="16" fill="#4A78A8" fontSize="8" fontFamily="monospace">AUC: 0.9075</text>
-  </svg>
+  return <img src="/model-comparison.png" alt="Model Comparison" style={{width:'100%',height:'auto',objectFit:'cover',display:'block'}}/>
 }
 function ThumbCoopScout() {
-  const n=[[110,70],[60,35],[160,35],[44,108],[176,108],[110,120],[75,75],[145,75]]
-  const e=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,7],[3,6],[4,7]]
-  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
-    <rect width="220" height="140" fill="#EDE8E3"/>
-    {e.map(([a,b],i)=><line key={i} x1={n[a][0]} y1={n[a][1]} x2={n[b][0]} y2={n[b][1]} stroke="#4A78A8" strokeWidth="1.5" opacity="0.3"/>)}
-    {n.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===0?8:5} fill={i===0?'#4A78A8':'#C8D9E6'} stroke="#4A78A8" strokeWidth="1"/>)}
-    <text x="8" y="14" fill="#4A78A8" fontSize="8" fontFamily="monospace">TF-IDF network</text>
-  </svg>
+  return <img src="/coopscout-photo.png" alt="Co-opScout" style={{width:'100%',height:'auto',display:'block'}}/>
 }
 function ThumbSEC() {
   const words=[{t:'risk',x:110,y:60,s:18},{t:'credit',x:72,y:82,s:13},{t:'debt',x:148,y:80,s:11},{t:'default',x:55,y:100,s:9},{t:'SEC',x:44,y:44,s:9},{t:'10-K',x:170,y:55,s:8}]
@@ -86,44 +101,110 @@ function ThumbSEC() {
   </svg>
 }
 function ThumbSoccer() {
-  const pl=[[66,44],[95,28],[125,28],[154,44],[110,62],[73,62],[147,62],[110,96],[66,96],[154,96],[110,116]]
-  const ps=[[0,1],[1,2],[2,3],[3,4],[4,5],[4,6],[5,7],[6,7],[7,8],[7,9],[0,5],[3,6]]
-  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
-    <rect width="220" height="140" fill="#EDE8E3"/>
-    <rect x="30" y="12" width="160" height="116" rx="3" fill="none" stroke="#C4BAA2" strokeWidth="0.8"/>
-    <ellipse cx="110" cy="70" rx="24" ry="24" fill="none" stroke="#C4BAA2" strokeWidth="0.8"/>
-    {ps.map(([a,b],i)=><line key={i} x1={pl[a][0]} y1={pl[a][1]} x2={pl[b][0]} y2={pl[b][1]} stroke="#4A78A8" strokeWidth="1" opacity="0.2"/>)}
-    {pl.map(([x,y],i)=><circle key={i} cx={x} cy={y} r="4" fill="#4A78A8" opacity={i===4?1:0.45}/>)}
-  </svg>
+  return <img src="/netsci-photo.png" alt="Network Science" style={{width:'100%',height:'auto',display:'block'}}/>
 }
 function ThumbTableau() {
-  const h=[0.9,0.4,0.7,0.3,0.8,0.5,0.6,0.2,0.3,0.8,0.5,0.9,0.2,0.7,0.4,0.6,0.6,0.3,0.9,0.5]
-  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
-    <rect width="220" height="140" fill="#EDE8E3"/>
-    {h.map((v,i)=>{const c=i%5,r=Math.floor(i/5);return<rect key={i} x={22+c*38} y={24+r*26} width="33" height="21" rx="3" fill="#4A78A8" opacity={0.08+v*0.65}/>})}
-    <text x="8" y="14" fill="#4A78A8" fontSize="8" fontFamily="monospace">MLS heat map</text>
-  </svg>
+  return <img src="/heatmap.png" alt="Price & Sales Heat Maps" style={{width:'100%',height:'auto',objectFit:'cover',display:'block'}}/>
 }
 function ThumbAST() {
-  const n=[[110,18],[66,52],[154,52],[44,88],[88,88],[132,88],[176,88],[33,116],[55,116],[110,116],[154,116]]
-  const e=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6],[3,7],[3,8],[5,9],[6,10]]
-  return <svg width="100%" height="100%" viewBox="0 0 220 130" preserveAspectRatio="xMidYMid slice">
-    <rect width="220" height="130" fill="#EDE8E3"/>
-    {e.map(([a,b],i)=><line key={i} x1={n[a][0]} y1={n[a][1]} x2={n[b][0]} y2={n[b][1]} stroke="#4A78A8" strokeWidth="1.5" opacity="0.35"/>)}
-    {n.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===0?6:i<3?5:3.5} fill="#F0EBE0" stroke="#4A78A8" strokeWidth={i===0?2:1.5} opacity={i===0?1:0.75}/>)}
-    <text x="8" y="13" fill="#4A78A8" fontSize="8" fontFamily="monospace">AST graph</text>
+  return <img src="/codescape-photo.png" alt="Codescape" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+
+// ── New thumbnails ──────────────────────────────────────────────
+function ThumbGenerate() {
+  return <img src="/application-system-photo.png" alt="Application System" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function ThumbConstitution() {
+  return <img src="/constitutional-evolution-photo.png" alt="Constitutional Evolution" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function _ThumbConstitutionSVG() {
+  const heat=[0.9,0.3,0.6,0.2,0.8,0.4,0.7,0.3,0.6,0.9,0.2,0.5,0.8,0.4,0.7,0.1,0.9,0.3,0.6,0.8,0.2,0.5,0.7,0.4,0.9]
+  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
+    <rect width="220" height="140" fill="#EDE8E3"/>
+    {heat.map((v,i)=>{const c=i%5,r=Math.floor(i/5);return<rect key={i} x={28+c*34} y={22+r*22} width="30" height="18" rx="2" fill="#4A78A8" opacity={0.1+v*0.7}/>})}
+    <text x="8" y="13" fontSize="8" fill="#4A78A8" fontFamily="monospace">17 constitutions · 1787–1997</text>
+    {[28,62,96,130,164].map((x,i)=><text key={i} x={x+15} y="135" fontSize="6" fill="#9A9888" fontFamily="monospace" textAnchor="middle">{['US','FR','DE','JP','BR'][i]}</text>)}
   </svg>
+}
+function ThumbFEMA() {
+  return <img src="/disasters-photo.png" alt="Geography of Disaster" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function ThumbTA() {
+  const grid=[[1,0,1,0,1],[0,1,0,1,0],[1,1,0,0,1],[0,0,1,1,0],[1,0,0,1,1]]
+  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
+    <rect width="220" height="140" fill="#EDE8E3"/>
+    {grid.map((row,r)=>row.map((v,c)=><rect key={`${r}${c}`} x={18+c*38} y={8+r*26} width="34" height="22" rx="3" fill={v?'#4A78A8':'#E8E0D4'} opacity={v?0.7:0.4}/>))}
+  </svg>
+}
+function ThumbMBTA() {
+  const lines=[
+    {pts:[[20,70],[55,60],[90,50],[125,55],[160,65],[195,60]],c:'#DA291C'},
+    {pts:[[20,90],[50,85],[85,75],[110,80],[145,88],[180,95],[210,90]],c:'#003DA5'},
+    {pts:[[40,110],[75,100],[100,95],[130,98],[165,105]],c:'#00843D'},
+  ]
+  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
+    <rect width="220" height="140" fill="#EDE8E3"/>
+    {lines.map((l,li)=><polyline key={li} points={l.pts.map(([x,y])=>`${x},${y}`).join(' ')} fill="none" stroke={l.c} strokeWidth="2.5" opacity="0.55" strokeLinecap="round" strokeLinejoin="round"/>)}
+    {lines.flatMap((l,li)=>l.pts.map(([x,y],pi)=><circle key={`${li}${pi}`} cx={x} cy={y} r="3.5" fill="white" stroke={l.c} strokeWidth="1.5" opacity="0.7"/>))}
+    <text x="8" y="13" fontSize="8" fill="#4A78A8" fontFamily="monospace">MBTA data dashboard</text>
+  </svg>
+}
+function ThumbSpotify() {
+  return <img src="/spotify-insight-photo.png" alt="Spotify Insight" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function ThumbVishing() {
+  return <img src="/vishing-photo.png" alt="Vishing Analysis" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+
+function ThumbSankey() {
+  return <img src="/artist-sankey-photo.png" alt="Artist Sankey" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function _ThumbSankeySVG() {
+  const layers = [[110], [60,160], [40,85,130,175]]
+  const edges = [[110,60],[110,160],[60,40],[60,85],[160,130],[160,175]]
+  return <svg width="100%" height="100%" viewBox="0 0 220 140" preserveAspectRatio="xMidYMid slice">
+    <rect width="220" height="140" fill="#EDE8E3"/>
+    {edges.map(([x1,x2],i)=><path key={i} d={`M${x1},30 C${x1},70 ${x2},70 ${x2},110`} fill="none" stroke="#4A78A8" strokeWidth={6-i*0.5} opacity="0.25"/>)}
+    {layers[0].map((x,i)=><rect key={i} x={x-18} y={20} width="36" height="16" rx="3" fill="#2F4156" opacity="0.7"/>)}
+    {layers[1].map((x,i)=><rect key={i} x={x-18} y={62} width="36" height="16" rx="3" fill="#4A78A8" opacity="0.65"/>)}
+    {layers[2].map((x,i)=><rect key={i} x={x-18} y={104} width="36" height="16" rx="3" fill="#4A78A8" opacity={0.4+i*0.1}/>)}
+    <text x="8" y="13" fontSize="8" fill="#4A78A8" fontFamily="monospace">artist sankey · MoMA</text>
+    {['Decade','Nationality','Gender'].map((l,i)=><text key={i} x={8} y={32+i*42} fontSize="7" fill="#9A9888" fontFamily="monospace">{l}</text>)}
+  </svg>
+}
+function ThumbDRV() {
+  return <img src="/fast-food-photo.png" alt="Fast Food Analytics" style={{width:'100%',height:'auto',display:'block'}}/>
+}
+function ThumbFoxes() {
+  return <img src="/rabbits-and-foxes-photo.png" alt="Rabbits and Foxes" style={{width:'100%',height:'auto',display:'block'}}/>
 }
 
 const PROJECTS = [
   { num:'01', title:'Credit Card Fraud Detection', category:'Machine Learning', desc:'XGBoost on 590k+ transactions. AUC 0.9075. Feature engineering + stacking ensemble.', tags:['XGBoost','Scikit-Learn','Kaggle'], github:'#', Thumb:ThumbFraud },
-  { num:'02', title:'Co-opScout', category:'Data Engineering', desc:'Selenium scraper + Flask API with TF-IDF recommendation system backed by PostgreSQL.', tags:['Flask','PostgreSQL','NLP'], github:'#', Thumb:ThumbCoopScout },
-  { num:'03', title:'SEC Risk Agent', category:'NLP', desc:'Google ADK agent analyzing SEC 10-K filings to surface credit risk patterns.', tags:['NLP','Google ADK'], github:'https://github.com/crbridget/sec-risk-agent', Thumb:ThumbSEC },
-  { num:'04', title:'Soccer Possession Networks', category:'Data Visualization', desc:'StatsBomb → NetworkX graphs. K-means classified 7 attack types.', tags:['NetworkX','K-Means'], github:'#', Thumb:ThumbSoccer },
-  { num:'05', title:'MLS Market Intelligence', category:'Data Visualization', desc:'6 Tableau dashboards on 12+ months of CoreLogic MLS data with zip-code heat maps.', tags:['Tableau','Pandas'], github:'#', Thumb:ThumbTableau },
-  { num:'06', title:'Codebase Graph Visualizer', category:'Data Engineering', desc:'Tree-sitter AST parser extracting complexity metrics for 3D graph visualization.', tags:['Tree-sitter','AST'], github:'#', Thumb:ThumbAST },
+  { num:'02', title:'Co-opScout', category:'Full Stack', desc:'Selenium scraper + Flask API with TF-IDF recommendation system backed by PostgreSQL.', tags:['Flask','PostgreSQL','NLP'], github:'https://github.com/crbridget/coopscout', Thumb:ThumbCoopScout },
+  { num:'03', title:'MLS Market Intelligence', category:'Data Visualization',
+    desc:'Built during my Data Analyst Internship at IDX Exchange. Ingested 12+ months of CoreLogic Trestle MLS transaction data, engineered 7+ market metrics (price-to-list ratio, price per sq ft, days on market), performed outlier detection with IQR, and enriched the dataset with live FRED mortgage rate data. Delivered 6 interactive Tableau dashboards — market trends, competitive agent/brokerage rankings, and zip-code heat maps — plus a 1-page San Francisco market intelligence report.',
+    tags:['Python','Pandas','Tableau','CoreLogic API','FRED'],
+    github:'https://github.com/crbridget/IDX-Exchange',
+    links:[
+      { label:'GitHub', url:'https://github.com/crbridget/IDX-Exchange' },
+      { label:'Market Analysis Dashboard', url:'https://public.tableau.com/app/profile/bridget.crampton/viz/market_analysis_17798558681020/AffordabilityPulsePricevs_MortgageRate' },
+      { label:'Competitive Analysis Dashboard', url:'https://public.tableau.com/app/profile/bridget.crampton/viz/competitive_analysis_17804649003350/PriceSalesHeatMaps' },
+      { label:'SF Market Intelligence Report', url:'/San_Francisco_Market_Intelligence.pdf' },
+    ],
+    Thumb:ThumbTableau },
+  { num:'04', title:'Codebase Graph Visualizer', category:'Software Engineering', desc:'Tree-sitter AST parser extracting complexity metrics for 3D graph visualization.', tags:['Tree-sitter','AST'], github:'#', Thumb:ThumbAST },
+  { num:'05', title:'Generate Application Portal', category:'Full Stack', desc:'Application portal for Generate NU — students apply to the club, admins review submissions, with role-based auth and configurable forms.', tags:['React','Supabase','Clerk'], github:'#', Thumb:ThumbGenerate },
+  { num:'06', title:'Constitutional Evolution', category:'NLP', desc:'Python text analysis tool visualizing linguistic patterns and thematic similarities across 17 constitutions spanning 1787–1997.', tags:['Python','NLP','Matplotlib'], github:'https://github.com/crbridget/constitutional-evolution-nlp', Thumb:ThumbConstitution },
+  { num:'07', title:'The Geography of Disaster', category:'Data Visualization', desc:'Interactive visualization of FEMA disaster funding patterns across the US, revealing geographic disparities in federal relief.', tags:['D3.js','FEMA','Python'], github:'https://github.com/crbridget/geography-of-disaster', Thumb:ThumbFEMA },
+  { num:'08', title:'TA Assignment Optimizer', category:'Software Engineering', desc:'Evolutionary computing solution for optimally assigning TAs to course sections while respecting constraints and preferences.', tags:['Python','Evolutionary Alg.'], github:'https://github.com/crbridget/TA-Assignment-Optimizer', Thumb:ThumbTA },
+  { num:'09', title:'Spotify Insight', category:'Machine Learning', desc:'Sentiment analysis on song titles, K-Means clustering by emotional tone, and ML models (Linear Regression, KNN, Random Forest) predicting song popularity.', tags:['Scikit-Learn','K-Means','NLP'], github:'https://github.com/crbridget/spotify-insight', Thumb:ThumbSpotify },
+  { num:'10', title:'Vishing Message Analysis', category:'NLP', desc:'Text preprocessing, TextBlob sentiment analysis, and Seaborn/WordCloud visualizations to identify patterns in phishing message language.', tags:['TextBlob','NLP','Seaborn'], github:'https://github.com/crbridget/vishing-text-analysis', Thumb:ThumbVishing },
+  { num:'11', title:'Artist Sankey', category:'Data Visualization', desc:'Multi-layer Sankey diagram visualizing MoMA artist demographics — decade of birth, nationality, and gender — cleaned and aggregated from raw JSON data.', tags:['Pandas','Sankey','Matplotlib'], github:'#', Thumb:ThumbSankey },
+  { num:'12', title:'Fast Food Analytics', category:'Machine Learning', desc:'Discrete random variable class modeling fast food profit distributions. Computes expected annual income (~$122k), PMF/CDF, and probability of profitability.', tags:['Python','Probability','Seaborn'], github:'#', Thumb:ThumbDRV },
+  { num:'13', title:'Rabbits & Foxes', category:'Software Engineering', desc:'Animated predator-prey ecosystem simulation. Rabbits eat grass, foxes eat rabbits — emergent population dynamics from simple rules over 4000+ generations.', tags:['NumPy','Matplotlib','Animation'], github:'#', Thumb:ThumbFoxes },
 ]
-const CATEGORIES = ['All','Machine Learning','Data Engineering','NLP','Data Visualization']
+const CATEGORIES = ['All','Machine Learning','Data Visualization','NLP','Full Stack','Software Engineering']
 
 const EXPERIENCE = [
   { title:'Incoming BI Co-op', company:'Klaviyo', date:'July 2026 – Present', bullets:['Data-driven decision making and analytics initiatives'] },
@@ -164,13 +245,10 @@ function LandingPage({ goTo }) {
       </div>
       <div className="landing-meta">
         <div>
-          <div className="landing-year">2025</div>
+          <div className="landing-year">2026</div>
           <div className="landing-name">Bridget Crampton</div>
         </div>
         <div className="landing-label">DATA SCIENCE<br/>NORTHEASTERN UNIVERSITY</div>
-      </div>
-      <div className="landing-hint" style={{cursor:'pointer'}} onClick={() => goTo('profile')}>
-        click to explore
       </div>
     </div>
   )
@@ -226,6 +304,7 @@ function ProfileViz() {
   )
 }
 
+// ── 3. Typing effect hook ──────────────────────────────────────
 function ProfilePage() {
   return (
     <div className="profile-page" style={{padding:0, position:'relative', overflow:'hidden', alignItems:'center', justifyContent:'center'}}>
@@ -267,7 +346,7 @@ function ProfilePage() {
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             crampton.b@northeastern.edu
           </a>
-          <a href="#" style={{
+          <a href="/Bridget-Crampton-Resume.pdf" target="_blank" style={{
             display:'inline-flex', alignItems:'center', gap:'7px',
             background:'transparent', color:'var(--navy)',
             fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
@@ -300,61 +379,285 @@ function ProfilePage() {
   )
 }
 
+// ── Bento grid view ───────────────────────────────────────────
+const BENTO_LAYOUT = [
+  { num:'01', span:'bento-wide', featured:true },
+  { num:'02', span:'bento-tall', featured:false },
+  { num:'03', span:'bento-sq',   featured:false },
+  { num:'04', span:'bento-sq',   featured:false },
+]
+
+function BentoCard({ p, onOpen, index }) {
+  const Thumb = p.Thumb
+  return (
+    <div className="bento-card" style={{'--i': index}} onClick={() => onOpen(p)}>
+      <div className="bento-thumb">{Thumb && <Thumb/>}</div>
+      <div className="bento-title-bar">
+        <div className="bento-cat">{p.category}</div>
+        <div className="bento-name">{p.title}</div>
+      </div>
+    </div>
+  )
+}
+
+function ProjectModal({ p, onClose }) {
+  const Thumb = p.Thumb
+  return (
+    <div className="proj-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="proj-modal">
+        {/* title bar */}
+        <div className="window-bar" style={{background:'var(--navy)'}}>
+          <span className="window-path" style={{fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'rgba(245,241,232,0.88)'}}>
+            C:\BRIDGET\projects\{p.title.toLowerCase().replace(/ /g,'-')}
+          </span>
+          <button className="win-close" onClick={onClose}>✕</button>
+        </div>
+        {/* content */}
+        <div className="proj-modal-body">
+          <div className="proj-modal-photo">
+            {Thumb && <Thumb/>}
+          </div>
+          <div className="proj-modal-info">
+            <div className="proj-modal-cat">{p.category}</div>
+            <div className="proj-modal-title">{p.title}</div>
+            <div className="proj-modal-tags">
+              {p.tags.map(t => <span key={t} className="proj-tag">{t}</span>)}
+            </div>
+            <div className="proj-modal-desc">{p.desc}</div>
+            {p.links ? (
+              <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                {p.links.map(l => (
+                  <a key={l.label} href={l.url} target="_blank" className="proj-modal-link">
+                    {l.label.toLowerCase().includes('github') ? <GithubIcon size={13}/> :
+                     l.label.toLowerCase().includes('tableau') ? <TableauIcon size={13}/> :
+                     l.label.toLowerCase().includes('report') ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> : null}
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+            ) : p.github !== '#' ? (
+              <a href={p.github} target="_blank" className="proj-modal-link">
+                <GithubIcon size={14}/> View on GitHub
+              </a>
+            ) : (
+              <span className="proj-modal-link-disabled">
+                <GithubIcon size={14}/> Repository private
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BentoView({ projects }) {
+  const [selected, setSelected] = useState(null)
+  const cols = [0,1,2,3].map(ci => projects.filter((_,i) => i%4===ci))
+  return (
+    <>
+      {/* 6. key changes with projects to retrigger stagger animation on filter */}
+      <div className="bento-grid" key={projects.map(p=>p.num).join(',')}>
+        {cols.map((col, ci) => (
+          <div key={ci} className="bento-col">
+            {col.map((p, i) => <BentoCard key={p.title} p={p} index={i} onOpen={setSelected}/>)}
+          </div>
+        ))}
+      </div>
+      {selected && <ProjectModal p={selected} onClose={() => setSelected(null)}/>}
+    </>
+  )
+}
+// ── end BentoView
+
+
+// ── DataFrame table view ──────────────────────────────────────
+function TableView({ projects }) {
+  const [sort, setSort] = useState(null)
+  const [dir, setDir] = useState(1)
+  const [expanded, setExpanded] = useState(null)
+
+  const sorted = [...projects].sort((a,b) => {
+    if (!sort) return 0
+    return a[sort] < b[sort] ? -dir : dir
+  })
+
+  function toggleSort(col) {
+    if (sort === col) setDir(d => -d)
+    else { setSort(col); setDir(1) }
+  }
+
+  const cols = [
+    { key:'num',      label:'idx',      w:'52px'  },
+    { key:'title',    label:'project',  w:'auto'  },
+    { key:'category', label:'category', w:'200px' },
+    { key:'tags',     label:'tools',    w:'200px' },
+  ]
+
+  return (
+    <div className="df-wrap">
+      <div className="df-header">
+        <span className="df-shape">DataFrame({projects.length} rows × {cols.length} cols)</span>
+      </div>
+      <div className="df-table-wrap">
+        <table className="df-table">
+          <thead>
+            <tr>
+              {cols.map(c=>(
+                <th key={c.key} style={{width:c.w}} onClick={()=>toggleSort(c.key)}>
+                  {c.label}
+                  {sort===c.key && <span className="df-sort">{dir>0?' ↑':' ↓'}</span>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((p,i)=>(
+              <>
+                <tr key={p.title}
+                  className={`df-row ${expanded===p.title?'df-row-active':''} ${i%2===0?'df-row-even':''}`}
+                  onClick={()=>setExpanded(expanded===p.title?null:p.title)}>
+                  <td className="df-idx">{i}</td>
+                  <td className="df-project">
+                    <span className="df-num">{p.num}</span> {p.title}
+                  </td>
+                  <td><span className="df-cat-pill">{p.category}</span></td>
+                  <td className="df-tools">{p.tags.join(', ')}</td>
+                </tr>
+                {expanded===p.title && (
+                  <tr key={`${p.title}-expand`} className="df-expanded-row">
+                    <td colSpan={4}>
+                      <div className="df-expanded">
+                        <div className="df-expanded-thumb">
+                          {p.Thumb && <p.Thumb/>}
+                        </div>
+                        <div className="df-expanded-info">
+                          <div className="df-expanded-title">{p.title}</div>
+                          <div className="df-expanded-desc">{p.desc}</div>
+                          <div className="df-expanded-meta">
+                            <span><b>category:</b> {p.category}</span>
+                            <span><b>tools:</b> {p.tags.join(' · ')}</span>
+                          </div>
+                          {p.github !== '#' && (
+                            <a href={p.github} target="_blank" className="proj-link" style={{marginTop:8,display:'inline-flex'}}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                              view source
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 function ProjectsPage() {
   const [cat, setCat] = useState('All')
+  const [view, setView] = useState('bento') // 'bento' | 'table'
+  const pageRef = useRef(null)
+
+  function changeCategory(c) {
+    setCat(c)
+    requestAnimationFrame(() => {
+      const container = document.querySelector('.scroll-page')
+      const section = document.getElementById('projects')
+      if (!container || !section) return
+      const sectionTop = section.getBoundingClientRect().top
+      const containerTop = container.getBoundingClientRect().top
+      const sectionH = section.clientHeight
+      const containerH = container.clientHeight
+      // center: offset to put section midpoint at viewport midpoint
+      const offset = sectionTop - containerTop + container.scrollTop
+        - containerH / 2
+        + Math.min(sectionH, containerH) / 2
+      container.scrollTo({ top: offset, behavior: 'smooth' })
+    })
+  }
   const filtered = PROJECTS.filter(p => cat==='All' || p.category===cat)
+
   return (
-    <div className="projects-page">
+    <div className="projects-page" ref={pageRef}>
       <div className="projects-header">
         <div className="projects-title">PROJECTS</div>
-        <div className="projects-count">{filtered.length} works · welcome to my brain</div>
+        <div className="projects-count">{filtered.length} projects · welcome to my brain</div>
+        {/* view toggle */}
+        <div className="view-toggle">
+          <button className={`view-btn ${view==='bento'?'active':''}`} onClick={()=>setView('bento')} title="Bento grid">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="0" y="0" width="6" height="10" rx="1"/><rect x="8" y="0" width="8" height="6" rx="1"/>
+              <rect x="0" y="12" width="16" height="4" rx="1"/><rect x="8" y="8" width="8" height="2" rx="1"/>
+            </svg>
+          </button>
+          <button className={`view-btn ${view==='table'?'active':''}`} onClick={()=>setView('table')} title="DataFrame">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="0" y="0" width="16" height="3" rx="1"/><rect x="0" y="5" width="16" height="2" rx="0.5" opacity="0.6"/>
+              <rect x="0" y="9" width="16" height="2" rx="0.5" opacity="0.6"/><rect x="0" y="13" width="16" height="2" rx="0.5" opacity="0.6"/>
+              <rect x="0" y="0" width="3" height="16" rx="0.5" opacity="0.3"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <div className="projects-filter">
         {CATEGORIES.map(c => (
-          <button key={c} className={`filter-btn ${cat===c?'active':''}`} onClick={()=>setCat(c)}>
+          <button key={c} className={`filter-btn ${cat===c?'active':''}`} onClick={()=>changeCategory(c)}>
             {c.toUpperCase()}
           </button>
         ))}
       </div>
-      <div className="projects-grid">
-        {filtered.map((p) => (
-          <div key={p.title} className="proj-card">
-            <div className="proj-num">{p.num}</div>
-            <div className="proj-thumb"><p.Thumb/></div>
-            <div className="proj-title-bar">
-              <div className="proj-title-bar-cat">{p.category}</div>
-              <div className="proj-title-bar-name">{p.title}</div>
-            </div>
-            <div className="proj-info">
-              <div className="proj-category">{p.category}</div>
-              <div className="proj-title">{p.title}</div>
-              <div className="proj-tags">{p.tags.map(t=><span key={t} className="proj-tag">{t}</span>)}</div>
-              {p.github !== '#' && (
-                <a href={p.github} target="_blank" className="proj-link">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                  source
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      {view === 'bento' ? <BentoView projects={filtered}/> : <TableView projects={filtered}/>}
     </div>
   )
 }
 
 // ── App ────────────────────────────────────────────────────────
 export default function App() {
-  const [page, setPage] = useState('landing')
+  const [active, setActive] = useState('landing')
+  const scrollRef = useRef(null)
+
+  function scrollTo(id) {
+    const container = scrollRef.current
+    const section = document.getElementById(id)
+    if (!container || !section) return
+    const target = section.getBoundingClientRect().top
+                 - container.getBoundingClientRect().top
+                 + container.scrollTop
+    container.scrollTo({ top: target, behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+
+    const sections = ['landing','profile','projects']
+    const observers = sections.map(id => {
+      const el = document.getElementById(id)
+      if (!el) return null
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActive(id) },
+        { root: container, threshold: 0.4 }
+      )
+      obs.observe(el)
+      return obs
+    })
+    return () => observers.forEach(o => o?.disconnect())
+  }, [])
 
   return (
     <div className="shell">
       <nav className="topnav">
-        <div className="nav-logo" style={{cursor:'pointer'}} onClick={()=>setPage('landing')}>BC</div>
+        <div className="nav-logo" style={{cursor:'pointer'}} onClick={()=>scrollTo('landing')}>BC</div>
         <div className="nav-links">
-          <button className={`nav-btn ${page==='landing'?'active':''}`} onClick={()=>setPage('landing')}>home</button>
-          <button className={`nav-btn ${page==='profile'?'active':''}`} onClick={()=>setPage('profile')}>profile</button>
-          <button className={`nav-btn ${page==='projects'?'active':''}`} onClick={()=>setPage('projects')}>projects</button>
+          <button className={`nav-btn ${active==='landing'?'active':''}`} onClick={()=>scrollTo('landing')}>home</button>
+          <button className={`nav-btn ${active==='profile'?'active':''}`} onClick={()=>scrollTo('profile')}>profile</button>
+          <button className={`nav-btn ${active==='projects'?'active':''}`} onClick={()=>scrollTo('projects')}>projects</button>
         </div>
         <div className="nav-social">
           <a href="https://github.com/crbridget" target="_blank" title="GitHub"><GithubIcon size={14}/></a>
@@ -362,10 +665,10 @@ export default function App() {
           <a href="https://public.tableau.com/app/profile/bridget.crampton/vizzes" target="_blank" title="Tableau"><TableauIcon size={14}/></a>
         </div>
       </nav>
-      <div className="page">
-        {page === 'landing'  && <LandingPage goTo={setPage}/>}
-        {page === 'profile'  && <ProfilePage/>}
-        {page === 'projects' && <ProjectsPage/>}
+      <div className="page scroll-page" ref={scrollRef}>
+        <section id="landing"><LandingPage goTo={scrollTo}/></section>
+        <section id="profile"><ProfilePage/></section>
+        <section id="projects"><ProjectsPage/></section>
       </div>
     </div>
   )
