@@ -358,7 +358,7 @@ function ProfilePage() {
         </div>
 
         {/* Text */}
-        <div style={{marginTop:'-28px'}}>
+        <div className="profile-text-block">
           <div className="profile-hello">HELLO!</div>
           <div className="profile-inam" style={{marginBottom:'10px'}}>I'M <span>BRIDGET.</span></div>
           <div className="profile-role" style={{marginBottom:'22px'}}>Data Scientist · Analyst · Engineer</div>
