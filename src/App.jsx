@@ -424,7 +424,7 @@ function ProjectModal({ p, onClose }) {
               <div className="proj-modal-meta-value">{p.category}</div>
             </div>
             <div className="proj-modal-meta-item">
-              <div className="proj-modal-meta-label">STACK</div>
+              <div className="proj-modal-meta-label">TOOLS</div>
               <div className="proj-modal-meta-value">{p.tags.join(' · ')}</div>
             </div>
             {Thumb && (
