@@ -547,68 +547,104 @@
 .df-expanded-meta b { color:var(--navy); }
 
 /* ── Project Modal ── */
+/* ── Project Modal v2 ── */
 .proj-modal-overlay {
   position:fixed; inset:0; z-index:1000;
-  background:rgba(47,65,86,0.5);
-  backdrop-filter:blur(4px);
+  background:rgba(47,65,86,0.45);
+  backdrop-filter:blur(6px);
   display:flex; align-items:center; justify-content:center;
   padding:24px;
-  animation:fadeIn 0.15s ease;
+  animation:fadeIn 0.18s ease;
 }
-.proj-modal {
+.proj-modal-v2 {
   background:var(--bg-card);
-  border:1.5px solid var(--border);
-  border-radius:8px;
-  box-shadow:0 16px 48px rgba(47,65,86,0.25);
-  width:min(760px,90vw);
-  max-height:90vh;
+  border-radius:10px;
+  box-shadow:0 24px 64px rgba(47,65,86,0.22);
+  width:min(680px,90vw);
+  max-height:88vh;
   overflow:hidden;
   display:flex; flex-direction:column;
-  animation:slideUp 0.18s ease;
+  animation:slideUp 0.2s cubic-bezier(0.22,1,0.36,1);
 }
-.proj-modal-body {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  overflow-y:auto;
+
+/* Colored header */
+.proj-modal-header {
+  background:var(--navy);
+  padding:28px 32px 26px;
+  position:relative;
+  flex-shrink:0;
 }
-.proj-modal-photo {
-  overflow:hidden; background:var(--bg);
-  border-right:1px solid var(--border);
+.proj-modal-filepath {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; color:rgba(200,217,230,0.6);
+  margin-bottom:10px; letter-spacing:0.3px;
 }
-.proj-modal-photo img { display:block; width:100%; height:100%; object-fit:cover; }
-.proj-modal-photo svg { display:block; width:100%; height:100%; }
-.proj-modal-info {
-  padding:28px 28px 28px;
-  display:flex; flex-direction:column; gap:12px;
+.proj-modal-h-title {
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300; font-size:clamp(28px,4vw,42px);
+  color:#F7F4EF; line-height:1.1;
+  letter-spacing:0.02em;
 }
-.proj-modal-cat {
-  font-family:'JetBrains Mono',monospace; font-size:10px;
-  color:var(--blue); text-transform:uppercase; letter-spacing:1px;
-}
-.proj-modal-title {
-  font-family:'Anton',sans-serif; font-size:22px;
-  letter-spacing:0.5px; color:var(--navy); line-height:1.2;
-}
-.proj-modal-tags { display:flex; flex-wrap:wrap; gap:6px; }
-.proj-modal-desc {
-  font-size:13.5px; color:var(--text-2); line-height:1.7;
-  flex:1;
-}
-.proj-modal-link {
-  display:inline-flex; align-items:center; gap:8px;
-  background:var(--navy); color:#F7F4EF;
-  font-family:'JetBrains Mono',monospace; font-size:11px;
-  padding:10px 18px; border-radius:6px; font-weight:600;
-  text-decoration:none; width:fit-content;
+.proj-modal-close {
+  position:absolute; top:16px; right:18px;
+  width:28px; height:28px; border-radius:6px;
+  background:rgba(255,255,255,0.1); border:none;
+  color:rgba(245,241,232,0.7); font-size:13px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:background 0.15s;
 }
-.proj-modal-link:hover { background:var(--blue); }
-.proj-modal-link-disabled {
-  display:inline-flex; align-items:center; gap:8px;
-  color:var(--text-muted);
-  font-family:'JetBrains Mono',monospace; font-size:11px;
-  padding:10px 0;
+.proj-modal-close:hover { background:rgba(255,255,255,0.2); color:#fff; }
+
+/* Body */
+.proj-modal-v2-body {
+  overflow-y:auto; padding:28px 32px 32px;
+  display:flex; flex-direction:column; gap:20px;
 }
+
+/* Metadata grid */
+.proj-modal-meta {
+  display:flex; gap:32px; flex-wrap:wrap;
+}
+.proj-modal-meta-item { display:flex; flex-direction:column; gap:4px; }
+.proj-modal-meta-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase;
+}
+.proj-modal-meta-value {
+  font-size:13px; font-weight:600; color:var(--navy);
+}
+.proj-modal-thumb-sm {
+  width:120px; height:72px; overflow:hidden;
+  border-radius:4px; border:1px solid var(--border);
+  margin-top:4px;
+}
+.proj-modal-thumb-sm img { width:100%; height:100%; object-fit:cover; display:block; }
+.proj-modal-thumb-sm svg { width:100%; height:100%; display:block; }
+
+/* Divider */
+.proj-modal-divider {
+  height:1px; background:var(--border);
+}
+
+/* Description */
+.proj-modal-v2-desc {
+  font-size:14px; color:var(--text-2); line-height:1.75;
+  font-family:'Cormorant Garamond',serif; font-style:italic;
+  font-size:16px;
+}
+
+/* Pill buttons */
+.proj-modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.proj-modal-pill {
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+  padding:9px 20px; border-radius:999px;
+  border:1.5px solid var(--navy); color:var(--navy);
+  background:transparent; text-decoration:none;
+  transition:all 0.15s; cursor:pointer;
+}
+.proj-modal-pill:hover { background:var(--navy); color:#F7F4EF; }
+.proj-modal-pill-disabled { opacity:0.4; cursor:default; }
+.proj-modal-pill-disabled:hover { background:transparent; color:var(--navy); }
 
 /* ══════════════════════════════
    ANIMATION SUITE

@@ -403,47 +403,60 @@ function ProjectModal({ p, onClose }) {
   const Thumb = p.Thumb
   return (
     <div className="proj-modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="proj-modal">
-        {/* title bar */}
-        <div className="window-bar" style={{background:'var(--navy)'}}>
-          <span className="window-path" style={{fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'rgba(245,241,232,0.88)'}}>
-            C:\BRIDGET\projects\{p.title.toLowerCase().replace(/ /g,'-')}
-          </span>
-          <button className="win-close" onClick={onClose}>✕</button>
-        </div>
-        {/* content */}
-        <div className="proj-modal-body">
-          <div className="proj-modal-photo">
-            {Thumb && <Thumb/>}
+      <div className="proj-modal-v2">
+
+        {/* Colored header with file path + big title */}
+        <div className="proj-modal-header">
+          <div className="proj-modal-filepath">
+            {p.title.toLowerCase().replace(/ /g,'-')}.jsx
           </div>
-          <div className="proj-modal-info">
-            <div className="proj-modal-cat">{p.category}</div>
-            <div className="proj-modal-title">{p.title}</div>
-            <div className="proj-modal-tags">
-              {p.tags.map(t => <span key={t} className="proj-tag">{t}</span>)}
+          <div className="proj-modal-h-title">{p.title}</div>
+          <button className="proj-modal-close" onClick={onClose}>✕</button>
+        </div>
+
+        {/* Body */}
+        <div className="proj-modal-v2-body">
+
+          {/* Metadata row */}
+          <div className="proj-modal-meta">
+            <div className="proj-modal-meta-item">
+              <div className="proj-modal-meta-label">CATEGORY</div>
+              <div className="proj-modal-meta-value">{p.category}</div>
             </div>
-            <div className="proj-modal-desc">{p.desc}</div>
-            {p.links ? (
-              <div style={{display:'flex',flexDirection:'column',gap:8}}>
-                {p.links.map(l => (
-                  <a key={l.label} href={l.url} target="_blank" className="proj-modal-link">
-                    {l.label.toLowerCase().includes('github') ? <GithubIcon size={13}/> :
-                     l.label.toLowerCase().includes('tableau') ? <TableauIcon size={13}/> :
-                     l.label.toLowerCase().includes('report') ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> : null}
-                    {l.label}
-                  </a>
-                ))}
+            <div className="proj-modal-meta-item">
+              <div className="proj-modal-meta-label">STACK</div>
+              <div className="proj-modal-meta-value">{p.tags.join(' · ')}</div>
+            </div>
+            {Thumb && (
+              <div className="proj-modal-meta-item proj-modal-thumb-inline">
+                <div className="proj-modal-meta-label">PREVIEW</div>
+                <div className="proj-modal-thumb-sm"><Thumb/></div>
               </div>
-            ) : p.github !== '#' ? (
-              <a href={p.github} target="_blank" className="proj-modal-link">
-                <GithubIcon size={14}/> View on GitHub
-              </a>
-            ) : (
-              <span className="proj-modal-link-disabled">
-                <GithubIcon size={14}/> Repository private
-              </span>
             )}
           </div>
+
+          <div className="proj-modal-divider"/>
+
+          {/* Description */}
+          <div className="proj-modal-v2-desc">{p.desc}</div>
+
+          {/* Buttons */}
+          <div className="proj-modal-btns">
+            {p.links ? (
+              p.links.map(l => (
+                <a key={l.label} href={l.url} target="_blank" className="proj-modal-pill">
+                  {l.label} →
+                </a>
+              ))
+            ) : p.github !== '#' ? (
+              <a href={p.github} target="_blank" className="proj-modal-pill">
+                GitHub →
+              </a>
+            ) : (
+              <span className="proj-modal-pill proj-modal-pill-disabled">Private repo</span>
+            )}
+          </div>
+
         </div>
       </div>
     </div>
