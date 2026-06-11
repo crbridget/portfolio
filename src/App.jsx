@@ -369,9 +369,7 @@ function ProfilePage() {
           <div className="profile-inam" style={{marginBottom:'10px'}}>I'M <span>BRIDGET.</span></div>
           <div className="profile-role" style={{marginBottom:'22px'}}>Data Scientist · Analyst · Engineer</div>
           <div className="profile-bio" style={{fontSize:'14.5px'}}>
-            <p style={{marginBottom:'14px'}}>I'm a data science student at Northeastern. I believe data is one of the most powerful tools we have for understanding the world and making it better for the people in it. I build with intention and I want people to feel the impact of what I make.</p>
-            <p style={{marginBottom:'14px'}}>I didn't grow up coding. I grew up singing and acting, which is about as far from data science as you can get. When I finally got into this field I was convinced everyone else had a ten year head start on me. Maybe they did. Now you'll find me voluntarily watching YouTube videos about AI and machine learning on a Friday night and genuinely enjoying it.</p>
-            <p>Right now I'm building my foundation through real estate analysis, machine learning, and business intelligence work at Klaviyo.</p>
+            <p>Hi, I'm Bridget. I'm a data science student at Northeastern. I believe data is one of the most powerful tools we have for understanding the world and making it better for the people in it. I build with intention and I want people to feel the impact of what I make. Right now I'm building my foundation through real estate analysis, machine learning, and business intelligence work at Klaviyo.</p>
           </div>
         </div>
       </div>
