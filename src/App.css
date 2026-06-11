@@ -369,12 +369,30 @@
   font-size:10px; color:var(--text-muted);
 }
 
+.projects-filter-wrap {
+  position:relative; margin-bottom:14px; flex-shrink:0;
+}
 .projects-filter {
-  display:flex; gap:5px; margin-bottom:14px; flex-shrink:0;
+  display:flex; gap:5px;
   overflow-x:auto; -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
 }
 .projects-filter::-webkit-scrollbar { display:none; }
+
+/* scroll hint — desktop hidden, mobile only */
+.filter-scroll-hint { display:none; }
+
+@media (max-width:600px) {
+  .filter-scroll-hint {
+    display:flex; align-items:center; justify-content:center;
+    position:absolute; right:0; top:0; bottom:0;
+    width:36px;
+    background:linear-gradient(to right, transparent, var(--bg) 60%);
+    color:var(--text-muted); font-size:16px;
+    pointer-events:none;
+    animation:hintBlink 2s ease-in-out 1s 3;
+  }
+}
 .filter-btn {
   font-family:'JetBrains Mono',monospace;
   font-size:10px; font-weight:600;

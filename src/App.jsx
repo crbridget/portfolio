@@ -614,12 +614,15 @@ function ProjectsPage() {
           </button>
         </div>
       </div>
-      <div className="projects-filter">
-        {CATEGORIES.map(c => (
-          <button key={c} className={`filter-btn ${cat===c?'active':''}`} onClick={()=>changeCategory(c)}>
-            {c.toUpperCase()}
-          </button>
-        ))}
+      <div className="projects-filter-wrap">
+        <div className="projects-filter">
+          {CATEGORIES.map(c => (
+            <button key={c} className={`filter-btn ${cat===c?'active':''}`} onClick={()=>changeCategory(c)}>
+              {c.toUpperCase()}
+            </button>
+          ))}
+        </div>
+        <div className="filter-scroll-hint">›</div>
       </div>
       {view === 'bento' ? <BentoView projects={filtered}/> : <TableView projects={filtered}/>}
     </div>
