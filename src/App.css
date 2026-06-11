@@ -346,7 +346,10 @@
 
 .projects-filter {
   display:flex; gap:5px; margin-bottom:14px; flex-shrink:0;
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
+.projects-filter::-webkit-scrollbar { display:none; }
 .filter-btn {
   font-family:'JetBrains Mono',monospace;
   font-size:10px; font-weight:600;
@@ -354,6 +357,7 @@
   border:1px solid var(--border);
   background:transparent; color:var(--text-muted);
   cursor:pointer; transition:all 0.15s;
+  white-space:nowrap; flex-shrink:0;
 }
 .filter-btn:hover { color:var(--text); }
 .filter-btn.active { background:var(--navy); color:#F7F4EF; border-color:var(--navy); }
