@@ -664,6 +664,11 @@
 .proj-modal-thumb-sm img { width:100%; height:auto; display:block; }
 .proj-modal-thumb-sm svg { width:100%; aspect-ratio:4/3; display:block; }
 
+@media (max-width:600px) {
+  .proj-modal-thumb-sm { width:100%; }
+  .proj-modal-meta-item.proj-modal-thumb-inline { width:100%; }
+}
+
 /* Divider */
 .proj-modal-divider {
   height:1px; background:var(--border);
