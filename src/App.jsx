@@ -264,51 +264,47 @@ function ProfileViz() {
   const bars=[45,68,35,82,52,90,44,72,58,84,38,66,94,55,76]
   const sparkD=[28,42,35,56,48,66,60,76,70,86,80,94]
   const sparkPts=sparkD.map((v,i)=>`${80+i*76},${390-(v*1.9)}`).join(' ')
+  const sparkLen = 900
   return (
     <svg style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:1}} width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
-      {/* subtle grid */}
+      <defs>
+        <style>{`
+          @keyframes pvFade{from{opacity:0}to{opacity:1}}
+          @keyframes pvEdge{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+          @keyframes pvLine{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+        `}</style>
+      </defs>
+      {/* grid — instant */}
       {[120,240,360,480].map(y=><line key={y} x1="0" y1={y} x2="1000" y2={y} stroke="#4A78A8" strokeWidth="0.4" opacity="0.07"/>)}
       {[200,400,600,800].map(x=><line key={x} x1={x} y1="0" x2={x} y2="600" stroke="#4A78A8" strokeWidth="0.4" opacity="0.07"/>)}
-      {/* scatter — top left */}
-      {scatter.map((d,i)=><circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#4A78A8" opacity={d.op}/>)}
-      {/* scatter — bottom right mirror */}
-      {scatter.map((d,i)=><circle key={`b${i}`} cx={1000-d.x*0.85} cy={600-d.y*0.75} r={d.r*0.9} fill="#2F4156" opacity={d.op*0.8}/>)}
-      {/* network — right */}
-      {edges.map(([a,b],i)=><line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke="#4A78A8" strokeWidth="1.5" opacity="0.1"/>)}
-      {nodes.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===0?11:6} fill="#4A78A8" opacity={i===0?0.14:0.09}/>)}
-      {/* sparkline */}
-      <polyline points={sparkPts} fill="none" stroke="#2F4156" strokeWidth="2" opacity="0.1" strokeLinecap="round" strokeLinejoin="round"/>
-      {sparkD.map((_,i)=><circle key={i} cx={80+i*76} cy={390-(sparkD[i]*1.9)} r="4" fill="#4A78A8" opacity="0.1"/>)}
-      {/* bar chart — bottom */}
-      {bars.map((h,i)=><rect key={i} x={275+i*31} y={585-h*0.9} width="24" height={h*0.9} rx="2" fill="#4A78A8" opacity={0.07+i*0.007}/>)}
+      {/* scatter — staggered fade */}
+      {scatter.map((d,i)=><circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#4A78A8" opacity={d.op} style={{animation:`pvFade 0.4s ease ${0.1+i*0.03}s both`}}/>)}
+      {scatter.map((d,i)=><circle key={`b${i}`} cx={1000-d.x*0.85} cy={600-d.y*0.75} r={d.r*0.9} fill="#2F4156" opacity={d.op*0.8} style={{animation:`pvFade 0.4s ease ${0.15+i*0.03}s both`}}/>)}
+      {/* network edges — draw in */}
+      {edges.map(([a,b],i)=><line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke="#4A78A8" strokeWidth="1.5" opacity="0.1" strokeDasharray="300" strokeDashoffset="300" style={{animation:`pvEdge 0.6s ease ${0.4+i*0.1}s forwards`}}/>)}
+      {/* network nodes — fade */}
+      {nodes.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===0?11:6} fill="#4A78A8" opacity={i===0?0.14:0.09} style={{animation:`pvFade 0.4s ease ${0.3+i*0.08}s both`}}/>)}
+      {/* sparkline — draws itself */}
+      <polyline points={sparkPts} fill="none" stroke="#2F4156" strokeWidth="2" opacity="0.1" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={sparkLen} strokeDashoffset={sparkLen} style={{animation:`pvLine 2s cubic-bezier(0.4,0,0.2,1) 0.5s forwards`}}/>
+      {sparkD.map((_,i)=><circle key={i} cx={80+i*76} cy={390-(sparkD[i]*1.9)} r="4" fill="#4A78A8" opacity="0.1" style={{animation:`pvFade 0.3s ease ${0.5+i*0.08}s both`}}/>)}
+      {/* bars — stagger up */}
+      {bars.map((h,i)=><rect key={i} x={275+i*31} y={585-h*0.9} width="24" height={h*0.9} rx="2" fill="#4A78A8" opacity={0.07+i*0.007} style={{animation:`pvFade 0.35s ease ${1.0+i*0.05}s both`}}/>)}
       {/* dashed circles */}
-      <circle cx="160" cy="300" r="200" fill="none" stroke="#4A78A8" strokeWidth="0.8" opacity="0.08" strokeDasharray="5 14"/>
-      <circle cx="840" cy="300" r="160" fill="none" stroke="#2F4156" strokeWidth="0.8" opacity="0.06" strokeDasharray="3 12"/>
-      {/* left axis */}
-      {[0,1,2,3,4,5].map(i=>(
-        <g key={i}>
-          <line x1="0" y1={100+i*82} x2="14" y2={100+i*82} stroke="#4A78A8" strokeWidth="1" opacity="0.2"/>
-          <text x="20" y={104+i*82} fontSize="8" fill="#9A9888" opacity="0.45" fontFamily="monospace">{100-i*20}</text>
-        </g>
-      ))}
-      <line x1="0" y1="100" x2="0" y2="590" stroke="#4A78A8" strokeWidth="0.8" opacity="0.15"/>
-      {/* bottom axis */}
-      {[0,1,2,3,4,5,6].map(i=>(
-        <g key={i}>
-          <line x1={100+i*135} y1="597" x2={100+i*135} y2="585" stroke="#4A78A8" strokeWidth="1" opacity="0.2"/>
-          <text x={100+i*135} y="580" fontSize="8" fill="#9A9888" opacity="0.45" fontFamily="monospace" textAnchor="middle">{i*20}</text>
-        </g>
-      ))}
-      <line x1="100" y1="597" x2="955" y2="597" stroke="#4A78A8" strokeWidth="0.8" opacity="0.15"/>
+      <circle cx="160" cy="300" r="200" fill="none" stroke="#4A78A8" strokeWidth="0.8" opacity="0.08" strokeDasharray="5 14" style={{animation:`pvFade 0.8s ease 1.2s both`}}/>
+      <circle cx="840" cy="300" r="160" fill="none" stroke="#2F4156" strokeWidth="0.8" opacity="0.06" strokeDasharray="3 12" style={{animation:`pvFade 0.8s ease 1.4s both`}}/>
+      {/* axes */}
+      {[0,1,2,3,4,5].map(i=>(<g key={i} style={{animation:`pvFade 0.4s ease ${0.6+i*0.06}s both`}}><line x1="0" y1={100+i*82} x2="14" y2={100+i*82} stroke="#4A78A8" strokeWidth="1" opacity="0.2"/><text x="20" y={104+i*82} fontSize="8" fill="#9A9888" opacity="0.45" fontFamily="monospace">{100-i*20}</text></g>))}
+      <line x1="0" y1="100" x2="0" y2="590" stroke="#4A78A8" strokeWidth="0.8" opacity="0.15" style={{animation:`pvFade 0.5s ease 0.5s both`}}/>
+      {[0,1,2,3,4,5,6].map(i=>(<g key={i} style={{animation:`pvFade 0.4s ease ${0.6+i*0.06}s both`}}><line x1={100+i*135} y1="597" x2={100+i*135} y2="585" stroke="#4A78A8" strokeWidth="1" opacity="0.2"/><text x={100+i*135} y="580" fontSize="8" fill="#9A9888" opacity="0.45" fontFamily="monospace" textAnchor="middle">{i*20}</text></g>))}
+      <line x1="100" y1="597" x2="955" y2="597" stroke="#4A78A8" strokeWidth="0.8" opacity="0.15" style={{animation:`pvFade 0.5s ease 0.5s both`}}/>
     </svg>
   )
 }
 
-// ── 3. Typing effect hook ──────────────────────────────────────
-function ProfilePage() {
+function ProfilePage({ vizKey }) {
   return (
     <div className="profile-page" style={{padding:0, position:'relative', overflow:'hidden', alignItems:'center', justifyContent:'center'}}>
-      <ProfileViz/>
+      <ProfileViz key={vizKey}/>
       <div style={{
         position:'relative', zIndex:2,
         display:'grid', gridTemplateColumns:'240px 1fr',
@@ -631,6 +627,7 @@ function ProjectsPage() {
 // ── App ────────────────────────────────────────────────────────
 export default function App() {
   const [active, setActive] = useState('landing')
+  const [profileVizKey, setProfileVizKey] = useState(0)
   const scrollRef = useRef(null)
 
   function scrollTo(id) {
@@ -653,7 +650,12 @@ export default function App() {
       const el = document.getElementById(id)
       if (!el) return null
       const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(id) },
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActive(id)
+            if (id === 'profile') setProfileVizKey(k => k + 1)
+          }
+        },
         { root: container, threshold: 0.4 }
       )
       obs.observe(el)
@@ -679,7 +681,7 @@ export default function App() {
       </nav>
       <div className="page scroll-page" ref={scrollRef}>
         <section id="landing"><LandingPage goTo={scrollTo}/></section>
-        <section id="profile"><ProfilePage/></section>
+        <section id="profile"><ProfilePage vizKey={profileVizKey}/></section>
         <section id="projects"><ProjectsPage/></section>
       </div>
     </div>
