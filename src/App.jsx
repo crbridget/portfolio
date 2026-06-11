@@ -236,20 +236,53 @@ function SkillRow({ name, pct, animate }) {
 }
 
 // ── Pages ──────────────────────────────────────────────────────
+const FEATURED = ['01','03','09'] // Fraud Detection, MLS, Spotify
+
 function LandingPage({ goTo }) {
+  const featured = PROJECTS.filter(p => FEATURED.includes(p.num))
+  const [selected, setSelected] = useState(null)
+
   return (
-    <div className="landing">
+    <div className="landing landing-v2">
       <div className="landing-viz"><LandingViz/></div>
-      <div className="landing-title">
-        <span className="port">PORT</span><span className="folio">FOLIO</span>
-      </div>
-      <div className="landing-meta">
-        <div>
-          <div className="landing-year">2026</div>
-          <div className="landing-name">Bridget Crampton</div>
+
+      {/* Hero text */}
+      <div className="lv2-hero">
+        <div className="lv2-year">2026 · DATA SCIENCE · NORTHEASTERN</div>
+        <div className="landing-title" style={{marginBottom:'12px'}}>
+          <span className="port">PORT</span><span className="folio">FOLIO</span>
         </div>
-        <div className="landing-label">DATA SCIENCE<br/>NORTHEASTERN UNIVERSITY</div>
+        <div className="lv2-name">Bridget Crampton</div>
+        <div className="lv2-bio">I build with intention and I want people to feel the impact of what I make.</div>
+        <button className="lv2-cta" onClick={() => goTo('profile')}>about me →</button>
       </div>
+
+      {/* Featured projects */}
+      <div className="lv2-featured">
+        <div className="lv2-featured-label">FEATURED PROJECTS</div>
+        <div className="lv2-cards">
+          {featured.map(p => {
+            const Thumb = p.Thumb
+            return (
+              <div key={p.title} className="lv2-card" onClick={() => setSelected(p)}>
+                <div className="lv2-card-thumb">{Thumb && <Thumb/>}</div>
+                <div className="lv2-card-info">
+                  <div className="lv2-card-cat">{p.category}</div>
+                  <div className="lv2-card-title">{p.title}</div>
+                </div>
+              </div>
+            )
+          })}
+          <div className="lv2-card lv2-card-all" onClick={() => goTo('projects')}>
+            <div className="lv2-card-all-inner">
+              <div className="lv2-card-all-num">+{PROJECTS.length - 3}</div>
+              <div className="lv2-card-all-text">view all<br/>projects →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {selected && <ProjectModal p={selected} onClose={() => setSelected(null)}/>}
     </div>
   )
 }
