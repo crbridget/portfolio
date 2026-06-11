@@ -459,7 +459,9 @@ function ProjectModal({ p, onClose }) {
 
 function BentoView({ projects }) {
   const [selected, setSelected] = useState(null)
-  const cols = [0,1,2,3].map(ci => projects.filter((_,i) => i%4===ci))
+  const isMobile = window.innerWidth <= 600
+  const numCols = isMobile ? 1 : 4
+  const cols = Array.from({length:numCols},(_,ci) => projects.filter((_,i) => i%numCols===ci))
   return (
     <>
       {/* 6. key changes with projects to retrigger stagger animation on filter */}

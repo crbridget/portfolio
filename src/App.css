@@ -40,6 +40,16 @@
   .nav-links { gap:4px; }
   .nav-social { gap:6px; }
   .nav-social a { width:26px; height:26px; }
+
+  /* Table: hide tools column, looser padding */
+  .df-tools, .df-table th:last-child { display:none; }
+  .df-table td { padding:10px 10px; font-size:12px; }
+  .df-table th { padding:8px 10px; font-size:10px; }
+  .df-project { font-size:12px; }
+  .df-cat-pill { font-size:9px; padding:2px 7px; }
+
+  /* Bento: make cards slightly taller so photos show well */
+  .bento-thumb { min-height:180px; }
 }
 .nav-btn:hover { color:var(--text); border-color:var(--border); }
 .nav-btn.active { background:var(--navy); color:#F7F4EF; border-color:var(--navy); }
