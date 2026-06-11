@@ -566,7 +566,9 @@ function TableView({ projects }) {
 
 function ProjectsPage() {
   const [cat, setCat] = useState('All')
-  const [view, setView] = useState('bento') // 'bento' | 'table'
+  const [view, setView] = useState(() =>
+    window.innerWidth <= 600 ? 'table' : 'bento'
+  )
   const pageRef = useRef(null)
 
   function changeCategory(c) {

@@ -16,11 +16,13 @@
   flex-shrink:0;
   position:relative;
   z-index:10;
+  gap:12px;
 }
 .nav-logo {
   font-family:'Anton',sans-serif;
   font-size:16px; letter-spacing:2px;
   color:var(--navy);
+  flex-shrink:0;
 }
 .nav-links { display:flex; gap:6px; }
 .nav-btn {
@@ -30,6 +32,14 @@
   border:1px solid transparent;
   background:transparent; color:var(--text-muted);
   cursor:pointer; transition:all 0.15s;
+  white-space:nowrap;
+}
+@media (max-width:600px) {
+  .topnav { padding:0 16px; gap:8px; }
+  .nav-btn { font-size:10px; padding:5px 10px; }
+  .nav-links { gap:4px; }
+  .nav-social { gap:6px; }
+  .nav-social a { width:26px; height:26px; }
 }
 .nav-btn:hover { color:var(--text); border-color:var(--border); }
 .nav-btn.active { background:var(--navy); color:#F7F4EF; border-color:var(--navy); }
