@@ -48,8 +48,18 @@
   .df-project { font-size:12px; }
   .df-cat-pill { font-size:9px; padding:2px 7px; }
 
-  /* Bento: make cards slightly taller so photos show well */
-  .bento-thumb { min-height:180px; }
+  /* Bento: natural photo height, no forced minimum */
+  .bento-thumb { min-height:0; }
+
+  /* Modal: fit viewport, tighter padding */
+  .proj-modal-v2 {
+    width:95vw;
+    max-height:92vh;
+  }
+  .proj-modal-header { padding:18px 20px 16px; }
+  .proj-modal-h-title { font-size:20px; }
+  .proj-modal-v2-body { padding:18px 20px 20px; gap:14px; }
+  .proj-modal-v2-desc { font-size:13px; line-height:1.6; }
 }
 .nav-btn:hover { color:var(--text); border-color:var(--border); }
 .nav-btn.active { background:var(--navy); color:#F7F4EF; border-color:var(--navy); }
