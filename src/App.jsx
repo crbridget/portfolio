@@ -309,13 +309,7 @@ function ProfilePage() {
   return (
     <div className="profile-page" style={{padding:0, position:'relative', overflow:'hidden', alignItems:'center', justifyContent:'center'}}>
       <ProfileViz/>
-      <div style={{
-        position:'relative', zIndex:2,
-        display:'grid', gridTemplateColumns:'240px 1fr',
-        gap:'52px', alignItems:'start',
-        maxWidth:'980px', width:'100%',
-        padding:'52px 56px 48px',
-      }}>
+      <div className="profile-content-grid">
         {/* Photo + bubbles */}
         <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', gap:'12px'}}>
           <img

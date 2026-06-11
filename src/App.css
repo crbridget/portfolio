@@ -177,6 +177,29 @@
   padding:40px 0;
 }
 
+/* Profile content grid */
+.profile-content-grid {
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-columns:240px 1fr;
+  gap:52px;
+  align-items:start;
+  max-width:980px; width:100%;
+  padding:52px 56px 48px;
+}
+
+@media (max-width:700px) {
+  .profile-content-grid {
+    grid-template-columns:1fr;
+    gap:28px;
+    padding:32px 24px 40px;
+  }
+  .profile-content-grid img {
+    width:160px !important;
+    height:192px !important;
+  }
+}
+
 /* Top hero row: photo + intro */
 .profile-hero {
   display:grid;
