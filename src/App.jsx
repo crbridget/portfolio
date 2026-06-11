@@ -594,7 +594,7 @@ function ProjectsPage() {
     <div className="projects-page" ref={pageRef}>
       <div className="projects-header">
         <div className="projects-title">PROJECTS</div>
-        <div className="projects-count">{filtered.length} projects · welcome to my brain</div>
+        <div className="projects-count">{filtered.length} projects · A mix of coursework, internships, and things I built because I wanted to</div>
         {/* view toggle */}
         <div className="view-toggle">
           <button className={`view-btn ${view==='bento'?'active':''}`} onClick={()=>setView('bento')} title="Bento grid">
