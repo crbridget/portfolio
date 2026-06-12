@@ -1,26 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Raleway:wght@200;300;400;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg: #F7EDE4;
+  --bg: #FFF6DC;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #FAFAF7;
-  --left-bg: #657166;
-  --left-text: rgba(253,232,211,0.9);
-  --left-text-muted: rgba(253,232,211,0.5);
-  --mint: #DAEBE3;
-  --sage: #CFD6C4;
-  --blue: #99CDD8;
-  --blue-mid: #6BAFC0;
-  --blue-light: rgba(153,205,216,0.18);
-  --rose: #F3C3B2;
-  --rose-mid: #E8A090;
-  --rose-light: rgba(243,195,178,0.2);
-  --olive: #657166;
-  --text: #4A5548;
-  --text-2: #6B7D6E;
-  --text-muted: #96A89A;
-  --border: #D8E8DE;
-  --shadow: 0 2px 16px rgba(101,113,102,0.1);
+  --bg-card-hover: #FFF9EE;
+  --left-bg: #a76e9c;
+  --left-text: rgba(255,239,186,0.95);
+  --left-text-muted: rgba(255,239,186,0.5);
+  --cream: #ffefba;
+  --ibis: #fbceb7;
+  --indigo: #a4a2cc;
+  --indigo-light: rgba(164,162,204,0.18);
+  --pink: #d86d9c;
+  --pink-light: rgba(216,109,156,0.15);
+  --mauve: #a76e9c;
+  --mauve-light: rgba(167,110,156,0.12);
+  --text: #5c3d6e;
+  --text-2: #7a5a8a;
+  --text-muted: #a98ab8;
+  --border: #ecd8f0;
+  --shadow: 0 2px 16px rgba(167,110,156,0.1);
   --radius: 10px;
   --radius-sm: 6px;
 }
@@ -37,6 +36,6 @@ body {
 
 ::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--sage); border-radius:2px; }
+::-webkit-scrollbar-thumb { background:var(--ibis); border-radius:2px; }
 
 a { text-decoration:none; color:inherit; }
