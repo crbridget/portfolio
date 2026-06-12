@@ -156,7 +156,7 @@
 
 .landing-meta {
   display:flex; justify-content:space-between; align-items:flex-end;
-  padding:0 48px; margin-top:16px;
+  padding:0 20px; margin-top:16px;
   position:relative; z-index:2;
   pointer-events:none;
 }
