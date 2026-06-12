@@ -241,12 +241,12 @@ function LandingPage({ goTo }) {
     <div className="landing">
       <div className="landing-viz"><LandingViz/></div>
       <div className="landing-title">
-        <span className="port">PORT</span><span className="folio">FOLIO</span>
+        <span className="port">BRIDGET </span><span className="folio">CRAMPTON</span>
       </div>
       <div className="landing-meta">
         <div>
           <div className="landing-year">2026</div>
-          <div className="landing-name">Bridget Crampton</div>
+          <div className="landing-name">Portfolio</div>
         </div>
         <div className="landing-label">DATA SCIENCE<br/>NORTHEASTERN UNIVERSITY</div>
       </div>
