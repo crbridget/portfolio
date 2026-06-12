@@ -1,33 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Raleway:wght@200;300;400;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg: #EEEBE4;
-  --bg-card: #F7F4EF;
-  --border: #C8BFA8;
-  --navy: #2F4156;
-  --blue: #4A78A8;
-  --blue-light: rgba(74,120,168,0.12);
-  --sky: #C8D9E6;
-  --text: #2F4156;
-  --text-2: #5A6275;
-  --text-muted: #9A9888;
+  --bg: #F7EDE4;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAFAF7;
+  --left-bg: #657166;
+  --left-text: rgba(253,232,211,0.9);
+  --left-text-muted: rgba(253,232,211,0.5);
+  --mint: #DAEBE3;
+  --sage: #CFD6C4;
+  --blue: #99CDD8;
+  --blue-mid: #6BAFC0;
+  --blue-light: rgba(153,205,216,0.18);
+  --rose: #F3C3B2;
+  --rose-mid: #E8A090;
+  --rose-light: rgba(243,195,178,0.2);
+  --olive: #657166;
+  --text: #4A5548;
+  --text-2: #6B7D6E;
+  --text-muted: #96A89A;
+  --border: #D8E8DE;
+  --shadow: 0 2px 16px rgba(101,113,102,0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html,body { height:100%; overflow:hidden; }
+html, body { height:100%; overflow:hidden; }
 
 body {
   font-family:'Inter',sans-serif;
-  background-color:var(--bg);
-  background-image:
-    linear-gradient(rgba(47,65,86,0.06) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(47,65,86,0.06) 1px, transparent 1px);
-  background-size:26px 26px;
+  background:var(--bg);
   color:var(--text);
   -webkit-font-smoothing:antialiased;
 }
 
-a { text-decoration:none; color:inherit; }
-::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb { background:var(--sage); border-radius:2px; }
+
+a { text-decoration:none; color:inherit; }
