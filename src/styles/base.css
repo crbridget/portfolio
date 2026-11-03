@@ -15,19 +15,19 @@
 }
 
 :root {
-  /* blue-tinted palette: canvas, surfaces, ink, single blue accent */
-  --bg: #e6ecf2;
-  --surface: #f3f6f9;
-  --surface-alt: #d6e2ee;
+  /* warm off-white palette (original cream) with navy ink and a single blue accent */
+  --bg: #eeebe4;
+  --surface: #f7f4ef;
+  --surface-alt: #e4ded2;
   --bg-card: var(--surface);
-  --border: #c3d0dd;
+  --border: #c8bfa8;
   --control-border: #5e6a77;
   --navy: #2f4156;
   --blue: #4a78a8;
   --blue-text: #2f5f8f;
   --blue-light: rgba(74, 120, 168, 0.12);
   --sky: #c8d9e6;
-  --cream: #f3f6f9;
+  --cream: #f7f4ef;
   --on-accent: #ffffff;
   --text: #2f4156;
   --text-body: #3e4c5c;
