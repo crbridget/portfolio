@@ -1,128 +1,151 @@
-// Decorative, animated data-viz backdrop behind the landing title.
-const BARS = [55, 72, 41, 88, 63, 95, 50, 78, 34, 82, 60, 91]
-const SPARK_POINTS = BARS.map((v, i) => `${110 + i * 70},${510 - v}`).join(' ')
-const SPARK_LENGTH = 900
+// Fine-line data drawing for the hero's right column: outlined bars, a rising
+// sparkline and a small layered neural network. Stroke widths are in viewBox units (about 2x) so
+// they render at roughly 1.5-1.8px at the column's size. Every stroke uses pathLength="1" so the hero can
+// draw it in with stroke-dashoffset; the default (CSS) state is fully drawn.
 
-const NODES = [
-  [500, 300],
-  [380, 200],
-  [620, 200],
-  [480, 440],
-  [640, 380],
-  [360, 380],
-  [260, 120],
-  [740, 120],
-]
-const EDGES = [
-  [500, 300, 380, 200],
-  [500, 300, 620, 200],
-  [500, 300, 480, 440],
-  [500, 300, 640, 380],
-  [500, 300, 360, 380],
-  [380, 200, 260, 120],
-  [620, 200, 740, 120],
+const BASELINE = 860
+const BAR_W = 36
+const BAR_PITCH = 58
+const BAR_X0 = 122
+const BAR_HEIGHTS = [150, 230, 190, 300, 255, 365, 320, 425, 380]
+const ACCENT_BAR = 7
+
+const SPARK = [
+  [100, 610],
+  [170, 565],
+  [240, 590],
+  [310, 505],
+  [380, 525],
+  [450, 440],
+  [520, 462],
+  [590, 372],
+  [650, 338],
 ]
 
-const KEYFRAMES = `
-  @keyframes drawLine{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
-  @keyframes nodeFade{from{opacity:0}to{opacity:1}}
-  @keyframes edgeDraw{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
-`
+// A small feed-forward network (3 → 4 → 3 → 2) drawn above the chart.
+const LAYERS = [
+  { x: 330, ys: [125, 195, 265] },
+  { x: 435, ys: [90, 160, 230, 300] },
+  { x: 540, ys: [125, 195, 265] },
+  { x: 640, ys: [160, 230] },
+]
+const NODES = LAYERS.flatMap((l) => l.ys.map((y) => [l.x, y]))
+const layerStart = (li) => LAYERS.slice(0, li).reduce((n, l) => n + l.ys.length, 0)
+const EDGES = LAYERS.slice(0, -1).flatMap((l, li) =>
+  l.ys.flatMap((_, a) =>
+    LAYERS[li + 1].ys.map((_, b) => [layerStart(li) + a, layerStart(li + 1) + b]),
+  ),
+)
+// One highlighted path through the network, input to output.
+const ACCENT_PATH = [1, 5, 8, 10]
+const isAccentEdge = ([a, b]) => ACCENT_PATH.some((n, i) => n === a && ACCENT_PATH[i + 1] === b)
+const HUB = ACCENT_PATH.at(-1)
+
+// Smooth a point list into a cubic path (midpoint control scheme).
+function smoothPath(points) {
+  let d = `M${points[0][0]},${points[0][1]}`
+  for (let i = 1; i < points.length; i++) {
+    const [x0, y0] = points[i - 1]
+    const [x1, y1] = points[i]
+    const mx = (x0 + x1) / 2
+    d += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`
+  }
+  return d
+}
+
+const SPARK_D = smoothPath(SPARK)
+const SPARK_PEAK_D = smoothPath(SPARK.slice(-3))
 
 export default function LandingViz() {
   return (
     <svg
-      width="100%"
-      height="100%"
-      viewBox="0 0 1000 600"
-      preserveAspectRatio="xMidYMid slice"
+      className="landing-viz-svg"
+      viewBox="0 0 700 900"
+      preserveAspectRatio="xMidYMax meet"
       aria-hidden="true"
+      focusable="false"
     >
-      <defs>
-        <style>{KEYFRAMES}</style>
-      </defs>
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+        {/* network edges */}
+        {EDGES.map((edge, i) => {
+          const [a, b] = edge
+          const accent = isAccentEdge(edge)
+          return (
+            <line
+              key={`e${i}`}
+              className="viz-edge"
+              x1={NODES[a][0]}
+              y1={NODES[a][1]}
+              x2={NODES[b][0]}
+              y2={NODES[b][1]}
+              pathLength="1"
+              stroke={accent ? 'var(--blue)' : 'var(--navy)'}
+              strokeWidth={accent ? 3 : 1.8}
+              strokeOpacity={accent ? 1 : 0.3}
+            />
+          )
+        })}
 
-      {/* bar chart */}
-      {BARS.map((h, i) => (
-        <rect
-          key={i}
-          x={300 + i * 36}
-          y={560 - h * 0.7}
-          width="28"
-          height={h * 0.7}
-          rx="3"
-          fill="#4A78A8"
-          opacity={0.06 + i * 0.007}
-          style={{ animation: `nodeFade 0.4s ease ${1.2 + i * 0.05}s both` }}
+        {/* baseline */}
+        <path
+          className="viz-draw"
+          d={`M96,${BASELINE} H664`}
+          pathLength="1"
+          stroke="var(--navy)"
+          strokeWidth="3"
         />
-      ))}
 
-      {/* self-drawing sparkline */}
-      <polyline
-        points={SPARK_POINTS}
-        fill="none"
-        stroke="#2F4156"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.07"
-        strokeDasharray={SPARK_LENGTH}
-        strokeDashoffset={SPARK_LENGTH}
-        style={{ animation: 'drawLine 2.2s cubic-bezier(0.4,0,0.2,1) 0.6s forwards' }}
-      />
+        {/* outlined bars, open at the baseline */}
+        {BAR_HEIGHTS.map((h, i) => {
+          const x = BAR_X0 + i * BAR_PITCH
+          const top = BASELINE - h
+          return (
+            <path
+              key={`b${i}`}
+              className="viz-draw viz-bar"
+              d={`M${x},${BASELINE} V${top + 4} Q${x},${top} ${x + 4},${top} H${x + BAR_W - 4} Q${x + BAR_W},${top} ${x + BAR_W},${top + 4} V${BASELINE}`}
+              pathLength="1"
+              stroke={i === ACCENT_BAR ? 'var(--blue)' : 'var(--navy)'}
+              strokeWidth={i === ACCENT_BAR ? 3.4 : 3}
+              strokeOpacity={i === ACCENT_BAR ? 1 : 0.85}
+            />
+          )
+        })}
 
-      {/* network edges */}
-      {EDGES.map(([x1, y1, x2, y2], i) => (
-        <line
-          key={i}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke="#4A78A8"
-          strokeWidth="0.8"
-          opacity="0.11"
-          strokeDasharray="300"
-          strokeDashoffset="300"
-          style={{ animation: `edgeDraw 0.6s ease ${0.5 + i * 0.12}s forwards` }}
+        {/* sparkline, with its rising peak segment in the accent */}
+        <path
+          className="viz-draw viz-spark"
+          d={SPARK_D}
+          pathLength="1"
+          stroke="var(--navy)"
+          strokeWidth="3.4"
         />
-      ))}
+        <path
+          className="viz-draw viz-spark"
+          d={SPARK_PEAK_D}
+          pathLength="1"
+          stroke="var(--blue)"
+          strokeWidth="3.4"
+        />
+      </g>
 
-      {/* network nodes */}
+      {/* node dots */}
       {NODES.map(([cx, cy], i) => (
         <circle
-          key={i}
+          key={`n${i}`}
+          className="viz-node"
           cx={cx}
           cy={cy}
-          r={i === 0 ? 6 : 4}
-          fill="#4A78A8"
-          opacity={i === 0 ? 0.14 : 0.09}
-          style={{ animation: `nodeFade 0.4s ease ${0.4 + i * 0.1}s both` }}
+          r={i === HUB ? 9 : 7}
+          fill={ACCENT_PATH.includes(i) ? 'var(--blue)' : 'var(--navy)'}
         />
       ))}
-
-      {/* dashed arcs */}
       <circle
-        cx="500"
-        cy="300"
-        r="160"
-        fill="none"
-        stroke="#2F4156"
-        strokeWidth="0.6"
-        opacity="0.06"
-        strokeDasharray="6 10"
-        style={{ animation: 'nodeFade 1s ease 1.4s both' }}
-      />
-      <circle
-        cx="500"
-        cy="300"
-        r="240"
-        fill="none"
-        stroke="#4A78A8"
-        strokeWidth="0.6"
-        opacity="0.05"
-        strokeDasharray="4 14"
-        style={{ animation: 'nodeFade 1s ease 1.6s both' }}
+        className="viz-node"
+        cx={SPARK.at(-1)[0]}
+        cy={SPARK.at(-1)[1]}
+        r="7"
+        fill="var(--blue)"
       />
     </svg>
   )

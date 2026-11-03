@@ -50,25 +50,79 @@ export function FileIcon({ size = 11 }) {
   )
 }
 
-export function BentoIcon({ size = 14 }) {
+// Lucide-derived icons (ISC license), matching the stroke style above.
+export function HomeIcon({ size = 16 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-      <rect x="0" y="0" width="6" height="10" rx="1" />
-      <rect x="8" y="0" width="8" height="6" rx="1" />
-      <rect x="0" y="12" width="16" height="4" rx="1" />
-      <rect x="8" y="8" width="8" height="2" rx="1" />
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     </svg>
   )
 }
 
-export function TableIcon({ size = 14 }) {
+export function UserIcon({ size = 16 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-      <rect x="0" y="0" width="16" height="3" rx="1" />
-      <rect x="0" y="5" width="16" height="2" rx="0.5" opacity="0.6" />
-      <rect x="0" y="9" width="16" height="2" rx="0.5" opacity="0.6" />
-      <rect x="0" y="13" width="16" height="2" rx="0.5" opacity="0.6" />
-      <rect x="0" y="0" width="3" height="16" rx="0.5" opacity="0.3" />
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <circle cx="12" cy="8" r="5" />
+      <path d="M20 21a8 8 0 0 0-16 0" />
+    </svg>
+  )
+}
+
+export function FolderIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+    </svg>
+  )
+}
+
+export function ArrowRightIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  )
+}
+
+export function DownloadIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" x2="12" y1="15" y2="3" />
+    </svg>
+  )
+}
+
+export function GraduationCapIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
+      <path d="M22 10v6" />
+      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+    </svg>
+  )
+}
+
+export function ChartIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+      <path d="M18 17V9" />
+      <path d="M13 17V5" />
+      <path d="M8 17v-3" />
+    </svg>
+  )
+}
+
+export function CpuIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...strokeProps} aria-hidden="true">
+      <rect width="16" height="16" x="4" y="4" rx="2" />
+      <rect width="6" height="6" x="9" y="9" rx="1" />
+      <path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2" />
     </svg>
   )
 }

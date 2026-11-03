@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { BentoIcon, TableIcon } from '../../components/icons.jsx'
 import { CATEGORIES, PROJECTS } from '../../data/projects.js'
 import BentoView from './BentoView.jsx'
-import TableView from './TableView.jsx'
 
 // Keep the projects section centered in the scroll container after the list resizes.
 function centerProjectsSection() {
@@ -23,10 +21,12 @@ function centerProjectsSection() {
 
 export default function Projects() {
   const [category, setCategory] = useState('All')
-  const [view, setView] = useState(() => (window.innerWidth <= 600 ? 'table' : 'bento'))
+  // After the first user change, swapped-in cards get a short refresh fade.
+  const [refreshed, setRefreshed] = useState(false)
 
   function changeCategory(c) {
     setCategory(c)
+    setRefreshed(true)
     requestAnimationFrame(centerProjectsSection)
   }
 
@@ -34,47 +34,33 @@ export default function Projects() {
 
   return (
     <div className="projects-page">
-      <div className="projects-header">
-        <h2 className="projects-title">PROJECTS</h2>
-        <div className="projects-count">
-          {filtered.length} projects · Coursework, internships, clubs, and personal builds.
-        </div>
-        <div className="view-toggle">
-          <button
-            className={`view-btn ${view === 'bento' ? 'active' : ''}`}
-            onClick={() => setView('bento')}
-            title="Bento grid"
-            aria-label="Bento grid view"
-          >
-            <BentoIcon />
-          </button>
-          <button
-            className={`view-btn ${view === 'table' ? 'active' : ''}`}
-            onClick={() => setView('table')}
-            title="DataFrame"
-            aria-label="Table view"
-          >
-            <TableIcon />
-          </button>
+      <div className="projects-header" data-reveal="rise">
+        <p className="section-label projects-count">{filtered.length} projects</p>
+        <h2 className="projects-title">Projects</h2>
+        <p className="projects-sub">Coursework, internships, clubs, and personal builds.</p>
+      </div>
+
+      <div className="projects-controls" data-reveal="rise" data-reveal-delay="80">
+        <div className="projects-filter-wrap">
+          <div className="projects-filter" role="group" aria-label="Filter projects by category">
+            {CATEGORIES.map((c) => (
+              <button
+                key={c}
+                className={`filter-btn ${category === c ? 'active' : ''}`}
+                aria-pressed={category === c}
+                onClick={() => changeCategory(c)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+          <div className="filter-scroll-hint" aria-hidden="true">
+            ›
+          </div>
         </div>
       </div>
 
-      <div className="projects-filter-wrap">
-        <div className="projects-filter">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              className={`filter-btn ${category === c ? 'active' : ''}`}
-              onClick={() => changeCategory(c)}
-            >
-              {c.toUpperCase()}
-            </button>
-          ))}
-        </div>
-        <div className="filter-scroll-hint">›</div>
-      </div>
-
-      {view === 'bento' ? <BentoView projects={filtered} /> : <TableView projects={filtered} />}
+      <BentoView projects={filtered} refreshed={refreshed} />
     </div>
   )
 }

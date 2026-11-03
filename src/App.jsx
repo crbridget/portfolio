@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
-import ExternalLink from './components/ExternalLink.jsx'
-import { GithubIcon, LinkedinIcon, TableauIcon } from './components/icons.jsx'
-import { SECTIONS, SOCIAL_LINKS } from './data/site.js'
+import { FolderIcon, HomeIcon, MailIcon, UserIcon } from './components/icons.jsx'
+import { EMAIL, SECTIONS } from './data/site.js'
+import { installReferenceReveals } from './lib/reveal.js'
 import Landing from './sections/Landing.jsx'
 import Profile from './sections/Profile.jsx'
 import Projects from './sections/projects/Projects.jsx'
 
-const NAV_LABELS = { landing: 'home', profile: 'profile', projects: 'projects' }
+const NAV_ITEMS = {
+  landing: { label: 'Home', Icon: HomeIcon },
+  profile: { label: 'About', Icon: UserIcon },
+  projects: { label: 'Projects', Icon: FolderIcon },
+}
 
 export default function App() {
   const [active, setActive] = useState('landing')
@@ -23,7 +27,7 @@ export default function App() {
     container.scrollTo({ top, behavior: 'smooth' })
   }
 
-  // Highlight the nav button for whichever section is mostly in view.
+  // Highlight the nav button for whichever section crosses the middle of the view.
   useEffect(() => {
     const container = scrollRef.current
     if (!container) return
@@ -34,7 +38,8 @@ export default function App() {
         ([entry]) => {
           if (entry.isIntersecting) setActive(id)
         },
-        { root: container, threshold: 0.4 },
+        // A thin band across the middle of the viewport, so tall sections still activate.
+        { root: container, rootMargin: '-45% 0px -54% 0px', threshold: 0 },
       )
       obs.observe(el)
       return obs
@@ -42,35 +47,40 @@ export default function App() {
     return () => observers.forEach((o) => o?.disconnect())
   }, [])
 
+  // One-time reveals for Profile and Projects groups below the fold.
+  useEffect(() => installReferenceReveals(), [])
+
   return (
     <div className="shell">
-      <nav className="topnav">
-        <button className="nav-logo" onClick={() => scrollTo('landing')}>
+      <header className="topnav">
+        <button
+          className="nav-mark"
+          onClick={() => scrollTo('landing')}
+          aria-label="Bridget Crampton, back to top"
+        >
           BC
         </button>
-        <div className="nav-links">
-          {SECTIONS.map((id) => (
-            <button
-              key={id}
-              className={`nav-btn ${active === id ? 'active' : ''}`}
-              onClick={() => scrollTo(id)}
-            >
-              {NAV_LABELS[id]}
-            </button>
-          ))}
-        </div>
-        <div className="nav-social">
-          <ExternalLink href={SOCIAL_LINKS.github} title="GitHub" aria-label="GitHub">
-            <GithubIcon size={14} />
-          </ExternalLink>
-          <ExternalLink href={SOCIAL_LINKS.linkedin} title="LinkedIn" aria-label="LinkedIn">
-            <LinkedinIcon size={14} />
-          </ExternalLink>
-          <ExternalLink href={SOCIAL_LINKS.tableau} title="Tableau" aria-label="Tableau">
-            <TableauIcon size={14} />
-          </ExternalLink>
-        </div>
-      </nav>
+        <nav className="nav-pill" aria-label="Primary">
+          {SECTIONS.map((id) => {
+            const { label, Icon } = NAV_ITEMS[id]
+            return (
+              <button
+                key={id}
+                className={`nav-item ${active === id ? 'active' : ''}`}
+                aria-current={active === id ? 'true' : undefined}
+                onClick={() => scrollTo(id)}
+              >
+                <Icon size={18} />
+                <span>{label}</span>
+              </button>
+            )
+          })}
+          <a className="nav-item" href={`mailto:${EMAIL}`}>
+            <MailIcon size={18} />
+            <span>Contact</span>
+          </a>
+        </nav>
+      </header>
 
       <main className="page scroll-page" ref={scrollRef}>
         <section id="landing">

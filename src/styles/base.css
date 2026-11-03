@@ -1,22 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Raleway:wght@200;300;400;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Self-hosted brand fonts (SIL OFL 1.1, licenses in public/fonts) */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/Inter-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prata';
+  src: url('/fonts/prata/Prata-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --bg: #eeebe4;
-  --bg-card: #f7f4ef;
-  --border: #c8bfa8;
+  /* blue-tinted palette: canvas, surfaces, ink, single blue accent */
+  --bg: #e6ecf2;
+  --surface: #f3f6f9;
+  --surface-alt: #d6e2ee;
+  --bg-card: var(--surface);
+  --border: #c3d0dd;
+  --control-border: #5e6a77;
   --navy: #2f4156;
   --blue: #4a78a8;
+  --blue-text: #2f5f8f;
   --blue-light: rgba(74, 120, 168, 0.12);
   --sky: #c8d9e6;
-  --cream: #f7f4ef;
+  --cream: #f3f6f9;
+  --on-accent: #ffffff;
   --text: #2f4156;
-  --text-2: #5a6275;
-  --text-muted: #9a9888;
+  --text-body: #3e4c5c;
+  --text-2: #4f5d6c;
+  --text-meta: #56677a;
+  --text-muted: #5f7183;
+  --text-strong-muted: #474e55;
+  --focus: #33608f;
 
-  --font-display: 'Anton', sans-serif;
-  --font-heading: 'Raleway', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Prata', Georgia, serif;
 
   --nav-height: 52px;
 }
@@ -37,8 +59,8 @@ body {
   font-family: var(--font-body);
   background-color: var(--bg);
   background-image:
-    linear-gradient(rgba(47, 65, 86, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(47, 65, 86, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(47, 65, 86, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 65, 86, 0.03) 1px, transparent 1px);
   background-size: 26px 26px;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -63,6 +85,42 @@ a {
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
+}
+
+/* Visually hidden, still announced by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Shared section label pill (blue square marker) ── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--surface-alt);
+  border-radius: 999px;
+  padding: 5px 12px 5px 10px;
+}
+.section-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--blue);
 }
 
 /* ── Shared keyframes ── */
