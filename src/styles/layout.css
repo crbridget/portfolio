@@ -1,0 +1,150 @@
+/* ═══════════ SHELL ═══════════ */
+.shell {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* ═══════════ TOP NAV (floating pill) ═══════════ */
+.topnav {
+  position: fixed;
+  top: 28px;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.topnav > * {
+  pointer-events: auto;
+}
+
+.nav-mark {
+  position: absolute;
+  top: 12px;
+  left: max(48px, calc((100vw - 1360px) / 2 + 48px));
+  min-width: 44px;
+  height: 44px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--navy);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    color 160ms ease-out,
+    background-color 160ms ease-out;
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 14px;
+  max-width: calc(100vw - 32px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(47, 65, 86, 0.1);
+}
+.nav-pill::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--navy);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out,
+    transform 120ms ease-out;
+}
+.nav-item.active {
+  background: var(--blue);
+  color: var(--on-accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav-item:not(.active):hover,
+  .nav-mark:hover {
+    background: rgba(74, 120, 168, 0.1);
+  }
+  .nav-mark:hover {
+    color: var(--blue);
+  }
+}
+.nav-item:active {
+  transform: translateY(1px);
+}
+.nav-item:focus-visible,
+.nav-mark:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 899px) {
+  .nav-mark {
+    display: none;
+  }
+}
+@media (max-width: 699px) {
+  .topnav {
+    top: 12px;
+  }
+  .nav-pill {
+    gap: 2px;
+    padding: 4px;
+  }
+  .nav-item {
+    font-size: 13px;
+    gap: 6px;
+    padding: 0 12px;
+  }
+  .nav-item svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 419px) {
+  .nav-item {
+    padding: 0 10px;
+  }
+  .nav-item svg {
+    display: none;
+  }
+}
+
+/* ═══════════ SCROLL CONTAINER ═══════════ */
+.page {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.scroll-page {
+  overflow-y: auto;
+  height: 100%;
+}
+.scroll-page section {
+  position: relative;
+}
+/* sections separate by tonal bands, not rules; each band pads itself */

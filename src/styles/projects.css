@@ -1,0 +1,269 @@
+/* ═══════════ PROJECTS (canvas band) ═══════════ */
+.projects-page {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 112px 48px 128px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* lexedge-style centered header: label, heavy sans heading, serif line */
+.projects-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.projects-title {
+  margin-top: 20px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: clamp(44px, 5vw, 72px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+.projects-sub {
+  margin-top: 12px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.25;
+  color: var(--blue-text);
+}
+
+/* ── Controls row: category pills + view toggle ── */
+.projects-controls {
+  margin: 36px 0 48px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 16px;
+}
+.projects-filter-wrap {
+  position: relative;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.projects-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 3px;
+}
+.filter-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease-out,
+    border-color 180ms ease-out,
+    color 180ms ease-out,
+    transform 120ms ease-out;
+}
+.filter-btn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--on-accent);
+}
+.filter-btn:active {
+  transform: translateY(1px);
+}
+.filter-scroll-hint {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .filter-btn:not(.active):hover {
+    background: rgba(74, 120, 168, 0.12);
+    border-color: var(--blue);
+  }
+}
+.filter-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ═══════════ CARD GRID (two-up, open cards) ═══════════ */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px 24px;
+}
+.bento-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 18px;
+  transition: transform 180ms ease-out;
+}
+.bento-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 180ms ease-out;
+}
+.bento-thumb img,
+.bento-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.bento-thumb img {
+  object-fit: cover;
+  object-position: center;
+}
+.bento-thumb.is-contain img {
+  object-fit: contain;
+  padding: 14px;
+}
+.bento-cat {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-meta);
+}
+.bento-name {
+  margin-top: 6px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.2;
+  color: var(--navy);
+  transition: color 180ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bento-card:hover {
+    transform: translateY(-2px);
+  }
+  .bento-card:hover .bento-thumb {
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+  .bento-card:hover .bento-name {
+    color: var(--blue-text);
+  }
+}
+.bento-card:focus-visible {
+  outline: none;
+}
+.bento-card:focus-visible .bento-thumb {
+  box-shadow:
+    0 0 0 2px var(--blue),
+    0 0 0 5px var(--focus);
+}
+.bento-card:focus-visible .bento-name {
+  color: var(--blue-text);
+}
+
+/* swapped-in cards after a filter or view change */
+@keyframes cardRefresh {
+  from {
+    opacity: 0.6;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.bento-grid.is-refreshed .bento-card {
+  animation: cardRefresh 220ms ease-out both;
+  animation-delay: min(calc(var(--i, 0) * 40ms), 240ms);
+}
+
+/* ── medium ── */
+@media (max-width: 1100px) {
+  .projects-page {
+    padding: 104px 32px 112px;
+  }
+  .bento-grid {
+    gap: 40px 20px;
+  }
+}
+
+/* ── compact ── */
+@media (max-width: 699px) {
+  .projects-page {
+    padding: 88px 20px 96px;
+  }
+  .projects-controls {
+    margin: 28px 0 32px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-width: 0;
+  }
+  .projects-filter {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-right: 36px;
+  }
+  .projects-filter::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-scroll-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    background: linear-gradient(to right, transparent, var(--bg) 60%);
+    color: var(--text-meta);
+    font-size: 18px;
+    pointer-events: none;
+    animation: hintBlink 2s ease-in-out 1s 3;
+  }
+  .bento-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+  .bento-thumb {
+    aspect-ratio: 1.57 / 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-grid.is-refreshed .bento-card,
+  .filter-scroll-hint {
+    animation: none;
+  }
+  .bento-card,
+  .bento-card:hover {
+    transform: none;
+  }
+}

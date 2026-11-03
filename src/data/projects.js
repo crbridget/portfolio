@@ -1,0 +1,150 @@
+import TaGridThumb from '../components/thumbs/TaGridThumb.jsx'
+
+const img = (file, alt) => ({ src: `/images/projects/${file}`, alt })
+
+// Each project shows either an `image` or a custom `Thumb` component.
+// `github` is omitted for private repos; `links` overrides the default GitHub button.
+export const PROJECTS = [
+  {
+    num: '01',
+    title: 'Credit Card Fraud Detection',
+    category: 'Machine Learning',
+    desc: 'Final project for DS4400 Machine Learning at Northeastern. Trained 6 ML models on 590k+ IEEE-CIS fraud transactions, with XGBoost achieving AUC 0.9075 (0.9195 on the public Kaggle leaderboard). Engineered 10+ features including card-level aggregations and amount deviation ratios, then built a stacking ensemble that improved fraud precision to 0.67 vs. 0.26 for standalone XGBoost.',
+    tags: ['XGBoost', 'Scikit-Learn', 'Kaggle'],
+    github: 'https://github.com/crbridget/credit-card-fraud-detection',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/crbridget/credit-card-fraud-detection' },
+      { label: 'Final Report', url: '/docs/DS4440_Final_Project_Report.pdf' },
+    ],
+    image: img('model-comparison.png', 'Model Comparison'),
+  },
+  {
+    num: '02',
+    title: 'Co-opScout',
+    category: 'Full Stack',
+    desc: 'Built a Python/Selenium scraper to extract 1000+ co-op postings from NUworks, then engineered a Flask REST API with a content-based recommendation engine using TF-IDF vectorization and cosine similarity. The backend is backed by PostgreSQL via Supabase, with structured cleaning pipelines and duplicate prevention.',
+    tags: ['Flask', 'PostgreSQL', 'NLP'],
+    github: 'https://github.com/crbridget/coopscout',
+    image: img('coopscout-photo.png', 'Co-opScout'),
+  },
+  {
+    num: '03',
+    title: 'MLS Market Intelligence',
+    category: 'Data Visualization',
+    desc: 'Built during my Data Analyst Internship at IDX Exchange, ingesting 12+ months of CoreLogic Trestle MLS transaction data and engineering 7+ market metrics including price-to-list ratio, price per sq ft, and days on market. Applied IQR outlier detection and enriched the dataset with live FRED mortgage rates before building 6 Tableau dashboards covering market trends, agent rankings, and zip-code heat maps. Delivered a final 1-page San Francisco market intelligence report summarizing key housing market findings.',
+    tags: ['Python', 'Pandas', 'Tableau', 'CoreLogic API', 'FRED'],
+    github: 'https://github.com/crbridget/IDX-Exchange',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/crbridget/IDX-Exchange' },
+      {
+        label: 'Market Analysis Dashboard',
+        url: 'https://public.tableau.com/app/profile/bridget.crampton/viz/market_analysis_17798558681020/AffordabilityPulsePricevs_MortgageRate',
+      },
+      {
+        label: 'Competitive Analysis Dashboard',
+        url: 'https://public.tableau.com/app/profile/bridget.crampton/viz/competitive_analysis_17804649003350/PriceSalesHeatMaps',
+      },
+      {
+        label: 'SF Market Intelligence Report',
+        url: '/docs/San_Francisco_Market_Intelligence.pdf',
+      },
+    ],
+    image: img('heatmap.png', 'Price & Sales Heat Maps'),
+  },
+  {
+    num: '04',
+    title: 'Codebase Graph Visualizer',
+    category: 'Software Engineering',
+    desc: 'Built as a member of a software product team at Forge, an engineering club at Northeastern, this project uses Tree-sitter to parse codebases into ASTs and extract 10+ structural metrics per file — cyclomatic complexity, class hierarchies, and dependency relationships. The structured graph data powers a 3D interactive visualization of codebase architecture.',
+    tags: ['Tree-sitter', 'AST'],
+    links: [{ label: 'Forge Website', url: 'https://www.forgenu.com/home' }],
+    image: img('codescape-photo.png', 'Codescape'),
+  },
+  {
+    num: '05',
+    title: 'Generate Application Portal',
+    category: 'Full Stack',
+    desc: "Built a full-stack application portal for Generate, Northeastern's product development studio, using React, Vite, Clerk, and Supabase. The system supports role-based authentication, configurable application forms, and an admin review dashboard for managing submissions.",
+    tags: ['React', 'Supabase', 'Clerk'],
+    links: [{ label: 'Generate Website', url: 'https://generatenu.com/#directors' }],
+    image: img('application-system-photo.png', 'Application System'),
+  },
+  {
+    num: '06',
+    title: 'Constitutional Evolution',
+    category: 'NLP',
+    desc: 'Developed a Python NLP pipeline to analyze linguistic patterns and thematic similarities across 17 national constitutions spanning 1787 to 1997. Used TF-IDF vectorization and cosine similarity to generate a constitutional similarity matrix, visualized as an interactive heatmap.',
+    tags: ['Python', 'NLP', 'Matplotlib'],
+    github: 'https://github.com/crbridget/constitutional-evolution-nlp',
+    image: img('constitutional-evolution-photo.png', 'Constitutional Evolution'),
+  },
+  {
+    num: '07',
+    title: 'The Geography of Disaster',
+    category: 'Data Visualization',
+    desc: 'Built an interactive data visualization analyzing FEMA disaster relief funding across the United States, surfacing geographic patterns and funding disparities over time. The project explores which regions receive the most federal aid and how disaster response trends have shifted across decades.',
+    tags: ['D3.js', 'FEMA', 'Python'],
+    github: 'https://github.com/crbridget/geography-of-disaster',
+    image: img('disasters-photo.png', 'Geography of Disaster'),
+  },
+  {
+    num: '08',
+    title: 'TA Assignment Optimizer',
+    category: 'Software Engineering',
+    desc: 'Designed an evolutionary computing solution to the TA assignment problem, optimizing pairings between teaching assistants and course sections across competing constraints and preferences. The algorithm uses selection, crossover, and mutation to iteratively improve assignment quality over generations.',
+    tags: ['Python', 'Evolutionary Alg.'],
+    github: 'https://github.com/crbridget/TA-Assignment-Optimizer',
+    Thumb: TaGridThumb,
+  },
+  {
+    num: '09',
+    title: 'Spotify Insight',
+    category: 'Machine Learning',
+    desc: 'Analyzed Spotify song data by engineering features from song titles and audio attributes, then applied TextBlob sentiment analysis to classify emotional tone. Used K-Means clustering to group songs by sentiment and built Linear Regression, KNN, and Random Forest models to predict song popularity.',
+    tags: ['Scikit-Learn', 'K-Means', 'NLP'],
+    github: 'https://github.com/crbridget/spotify-insight',
+    image: img('spotify-insight-photo.png', 'Spotify Insight'),
+  },
+  {
+    num: '10',
+    title: 'Vishing Message Analysis',
+    category: 'NLP',
+    desc: 'Preprocessed and cleaned a dataset of vishing (voice phishing) messages through language filtering, stopword removal, and normalization. Applied TextBlob sentiment analysis and visualized patterns using Seaborn and WordCloud to identify linguistic characteristics common in phishing attempts.',
+    tags: ['TextBlob', 'NLP', 'Seaborn'],
+    github: 'https://github.com/crbridget/vishing-text-analysis',
+    image: img('vishing-photo.png', 'Vishing Analysis'),
+  },
+  {
+    num: '11',
+    title: 'Artist Sankey',
+    category: 'Data Visualization',
+    desc: 'Loaded, cleaned, and aggregated MoMA artist data to build a multi-layer Sankey diagram showing the flow between artist birth decade, nationality, and gender. Used Pandas for data preparation and a custom Sankey library to render the visualization, filtering to combos with 20+ artists for clarity.',
+    tags: ['Pandas', 'Sankey', 'Matplotlib'],
+    image: img('artist-sankey-photo.png', 'Artist Sankey'),
+  },
+  {
+    num: '12',
+    title: 'Fast Food Analytics',
+    category: 'Machine Learning',
+    desc: "Built a Discrete Random Variable (DRV) class from scratch to model the probability distribution of a fast food restaurant's annual income. The class supports arithmetic operations between distributions, computes expected value (E[X] ≈ $122k), and plots both the PMF and cumulative distribution function.",
+    tags: ['Python', 'Probability', 'Seaborn'],
+    image: img('fast-food-photo.png', 'Fast Food Analytics'),
+  },
+  {
+    num: '13',
+    title: 'Rabbits & Foxes',
+    category: 'Software Engineering',
+    desc: "Implemented an animated predator-prey ecosystem simulation using NumPy arrays and Matplotlib's animation library, modeling rabbits, foxes, and grass across a 200x200 grid. Complex oscillating population dynamics emerge from simple rules — rabbits starve without grass, foxes starve without rabbits — over 4000+ simulated generations.",
+    tags: ['NumPy', 'Matplotlib', 'Animation'],
+    image: img('rabbits-and-foxes-photo.png', 'Rabbits and Foxes'),
+  },
+]
+
+export const CATEGORIES = [
+  'All',
+  'Machine Learning',
+  'Data Visualization',
+  'NLP',
+  'Full Stack',
+  'Software Engineering',
+]
