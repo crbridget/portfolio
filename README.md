@@ -1,16 +1,41 @@
-# React + Vite
+# Bridget Crampton — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal data-science portfolio built with React 19 and Vite.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Command                | What it does                     |
+| ---------------------- | -------------------------------- |
+| `npm run dev`          | Start the dev server             |
+| `npm run build`        | Production build into `dist/`    |
+| `npm run preview`      | Serve the production build       |
+| `npm run lint`         | ESLint                           |
+| `npm run format`       | Format everything with Prettier  |
+| `npm run format:check` | Check formatting without writing |
 
-## React Compiler
+## Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+public/
+  docs/                 PDFs (resume, reports)
+  images/               headshot
+  images/projects/      project thumbnails
+src/
+  main.jsx              entry; imports global styles
+  App.jsx               shell, top nav, section scroll-spy
+  data/
+    projects.js         project list + filter categories  ← edit to add projects
+    site.js             email, resume path, social links
+  components/           shared pieces (icons, ExternalLink, ProjectThumb, viz backdrops)
+  sections/
+    Landing.jsx
+    Profile.jsx
+    projects/           Projects section, bento grid, table view, modal
+  styles/               base, layout, and one stylesheet per section
+```
 
-## Expanding the ESLint configuration
+### Adding a project
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Add an entry to `src/data/projects.js`. Put its screenshot in `public/images/projects/` and
+reference it with `image: img('file.png', 'Alt text')`. Omit `github` for private repos, or
+provide `links` to show custom buttons in the modal.

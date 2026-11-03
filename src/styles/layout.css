@@ -1,0 +1,121 @@
+/* ═══════════ SHELL ═══════════ */
+.shell {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* ═══════════ TOP NAV ═══════════ */
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--nav-height);
+  padding: 0 40px;
+  background: rgba(238, 235, 228, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--navy);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+}
+.nav-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 18px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-btn:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+.nav-btn.active {
+  background: var(--navy);
+  color: var(--cream);
+  border-color: var(--navy);
+}
+
+.nav-social {
+  display: flex;
+  gap: 10px;
+}
+.nav-social a {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background: var(--navy);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.nav-social a:hover {
+  background: var(--blue);
+}
+
+/* ═══════════ SCROLL CONTAINER ═══════════ */
+.page {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.scroll-page {
+  overflow-y: auto;
+  height: 100%;
+}
+.scroll-page section {
+  position: relative;
+}
+.scroll-page section + section {
+  margin-top: 48px;
+  border-top: 1.5px solid var(--border);
+  padding-top: 48px;
+}
+
+@media (max-width: 600px) {
+  .topnav {
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .nav-btn {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+  .nav-links {
+    gap: 4px;
+  }
+  .nav-social {
+    gap: 6px;
+  }
+  .nav-social a {
+    width: 26px;
+    height: 26px;
+  }
+}

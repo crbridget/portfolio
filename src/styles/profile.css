@@ -1,0 +1,130 @@
+/* ═══════════ PROFILE ═══════════ */
+.profile-page {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-viz {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.profile-content-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 52px;
+  align-items: start;
+  max-width: 980px;
+  width: 100%;
+  padding: 52px 56px 48px;
+}
+
+/* ── Photo column ── */
+.profile-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.profile-photo {
+  display: block;
+  width: 230px;
+  height: 276px;
+  object-fit: cover;
+  object-position: top center;
+  border: 3px solid var(--navy);
+  outline: 5px solid var(--sky);
+  outline-offset: 5px;
+  box-shadow: 5px 7px 0 var(--navy);
+}
+
+.profile-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  transition: all 0.15s;
+}
+.profile-pill-solid {
+  background: var(--navy);
+  color: var(--cream);
+}
+.profile-pill-solid:hover {
+  background: var(--blue);
+}
+.profile-pill-outline {
+  background: transparent;
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+.profile-pill-outline:hover {
+  background: var(--navy);
+  color: var(--cream);
+}
+
+/* ── Text column ── */
+.profile-text-block {
+  margin-top: -28px;
+}
+.profile-hello,
+.profile-inam {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 58px);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.profile-hello {
+  color: rgba(47, 65, 86, 0.25);
+}
+.profile-inam {
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.profile-inam span {
+  color: var(--blue);
+}
+.profile-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+.profile-bio {
+  font-size: 14.5px;
+  color: var(--text-2);
+  line-height: 1.75;
+}
+.profile-bio p + p {
+  margin-top: 12px;
+}
+
+@media (max-width: 700px) {
+  .profile-content-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 32px 24px 40px;
+  }
+  .profile-photo {
+    width: 160px;
+    height: 192px;
+  }
+  .profile-text-block {
+    margin-top: 16px;
+  }
+}

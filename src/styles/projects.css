@@ -1,0 +1,429 @@
+/* ═══════════ PROJECTS ═══════════ */
+.projects-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px 280px;
+}
+
+.projects-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+.projects-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: 2px;
+  color: var(--navy);
+}
+.projects-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── View toggle ── */
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.view-btn:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+.view-btn.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--cream);
+}
+
+/* ── Category filter ── */
+.projects-filter-wrap {
+  position: relative;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+.projects-filter {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.projects-filter::-webkit-scrollbar {
+  display: none;
+}
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.filter-btn:hover {
+  color: var(--text);
+}
+.filter-btn.active {
+  background: var(--navy);
+  color: var(--cream);
+  border-color: var(--navy);
+}
+/* mobile-only hint that the filter row scrolls */
+.filter-scroll-hint {
+  display: none;
+}
+
+/* ═══════════ BENTO GRID ═══════════ */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bento-grid {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+}
+.bento-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.bento-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  animation: cardIn 0.4s ease both;
+}
+.bento-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 6px 20px rgba(47, 65, 86, 0.1);
+}
+/* stagger entrance down each column, offset per column */
+.bento-col:nth-child(1) .bento-card {
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+.bento-col:nth-child(2) .bento-card {
+  animation-delay: calc(80ms + var(--i, 0) * 80ms);
+}
+.bento-col:nth-child(3) .bento-card {
+  animation-delay: calc(160ms + var(--i, 0) * 80ms);
+}
+.bento-col:nth-child(4) .bento-card {
+  animation-delay: calc(240ms + var(--i, 0) * 80ms);
+}
+
+.bento-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+.bento-thumb svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+.bento-title-bar {
+  padding: 10px 12px;
+  flex-shrink: 0;
+  background: var(--navy);
+}
+.bento-card:hover .bento-title-bar {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.bento-cat {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--sky);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 3px;
+  opacity: 0.75;
+}
+.bento-name {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--cream);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+/* ═══════════ DATAFRAME TABLE ═══════════ */
+.df-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.df-header {
+  background: var(--navy);
+  color: rgba(245, 241, 232, 0.6);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 6px 6px 0 0;
+  flex-shrink: 0;
+}
+.df-shape {
+  color: var(--sky);
+}
+.df-table-wrap {
+  overflow-y: auto;
+  flex: 1;
+  border: 1.5px solid var(--navy);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+}
+.df-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.df-table thead tr {
+  background: var(--navy);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.df-table th {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(245, 241, 232, 0.7);
+  text-align: left;
+  padding: 10px 16px;
+  border-right: 1px solid rgba(245, 241, 232, 0.08);
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: 0.5px;
+}
+.df-table th:hover {
+  color: var(--cream);
+}
+.df-table td {
+  padding: 10px 16px;
+  border-right: 1px solid var(--border);
+  vertical-align: middle;
+}
+.df-sort {
+  color: var(--sky);
+  margin-left: 2px;
+}
+
+.df-row {
+  cursor: pointer;
+  transition: background 0.12s;
+  border-bottom: 1px solid var(--border);
+}
+.df-row-even {
+  background: rgba(47, 65, 86, 0.03);
+}
+.df-row:hover {
+  background: rgba(74, 120, 168, 0.08);
+}
+.df-row.df-row-active {
+  background: rgba(74, 120, 168, 0.1);
+}
+
+.df-idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 52px;
+}
+.df-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-right: 8px;
+}
+.df-project {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.df-cat-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--blue-light);
+  color: var(--blue);
+  border: 1px solid rgba(74, 120, 168, 0.25);
+  white-space: nowrap;
+}
+.df-tools {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+}
+
+/* ── Expanded row ── */
+.df-expanded-row {
+  background: rgba(74, 120, 168, 0.05);
+}
+.df-expanded {
+  display: flex;
+  gap: 20px;
+  padding: 14px 16px;
+  animation: slideUp 0.15s ease;
+}
+.df-expanded-thumb {
+  position: relative;
+  width: 160px;
+  height: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.df-expanded-thumb img,
+.df-expanded-thumb svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.df-expanded-thumb img {
+  object-fit: cover;
+  object-position: center;
+}
+.df-expanded-info {
+  flex: 1;
+}
+.df-expanded-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.df-expanded-desc {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.df-expanded-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.df-expanded-meta b {
+  color: var(--navy);
+}
+
+.proj-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--blue);
+}
+.proj-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .filter-scroll-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    background: linear-gradient(to right, transparent, var(--bg) 60%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+    animation: hintBlink 2s ease-in-out 1s 3;
+  }
+
+  /* table: hide tools column, tighter cells */
+  .df-tools,
+  .df-table th:last-child {
+    display: none;
+  }
+  .df-table td {
+    padding: 10px;
+    font-size: 12px;
+  }
+  .df-table th {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .df-project {
+    font-size: 12px;
+  }
+  .df-cat-pill {
+    font-size: 9px;
+    padding: 2px 7px;
+  }
+
+  /* expanded row: stack photo above text */
+  .df-expanded {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .df-expanded-thumb {
+    width: 100%;
+    height: 160px;
+  }
+  .df-expanded-info {
+    width: 100%;
+  }
+}

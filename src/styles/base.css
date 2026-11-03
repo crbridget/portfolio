@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Raleway:wght@200;300;400;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #eeebe4;
+  --bg-card: #f7f4ef;
+  --border: #c8bfa8;
+  --navy: #2f4156;
+  --blue: #4a78a8;
+  --blue-light: rgba(74, 120, 168, 0.12);
+  --sky: #c8d9e6;
+  --cream: #f7f4ef;
+  --text: #2f4156;
+  --text-2: #5a6275;
+  --text-muted: #9a9888;
+
+  --font-display: 'Anton', sans-serif;
+  --font-heading: 'Raleway', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --nav-height: 52px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(47, 65, 86, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 65, 86, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2 {
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ── Shared keyframes ── */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hintBlink {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── Shared project thumbnail image ── */
+.project-thumb-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
