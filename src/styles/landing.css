@@ -18,7 +18,7 @@
   margin: 0 auto;
   padding: 0 48px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(260px, 25vw, 380px);
+  grid-template-columns: minmax(0, 1fr) clamp(280px, 30vw, 440px);
   column-gap: 48px;
   align-items: center;
 }
@@ -192,17 +192,25 @@
 }
 
 .landing-visual {
-  align-self: end;
+  position: relative;
+  align-self: center;
   justify-self: end;
   width: 100%;
-  margin-right: 22px;
-  margin-bottom: -16px;
 }
-.landing-viz-svg {
+.landing-portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--surface-alt);
+  box-shadow: 0 8px 24px rgba(47, 65, 86, 0.12);
+}
+.landing-portrait img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 7 / 9;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
 }
 
 /* focus rings for hero controls */
@@ -219,8 +227,7 @@
     column-gap: 32px;
   }
   .landing-visual {
-    margin-right: 0;
-    max-width: 340px;
+    max-width: 360px;
   }
 }
 
@@ -249,9 +256,9 @@
   }
   .landing-visual {
     justify-self: center;
-    width: 70%;
-    max-width: 300px;
-    margin: 32px 0 0;
+    width: 72%;
+    max-width: 320px;
+    margin: 36px 0 0;
   }
 }
 
