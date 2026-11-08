@@ -10,8 +10,7 @@ import {
   LinkedinIcon,
   TableauIcon,
 } from '../components/icons.jsx'
-import LandingViz from '../components/viz/LandingViz.jsx'
-import { EMAIL, RESUME_URL, SOCIAL_LINKS } from '../data/site.js'
+import { EMAIL, PORTRAIT_URL, RESUME_URL, SOCIAL_LINKS } from '../data/site.js'
 
 const ROLES = [
   'Data Science Student',
@@ -112,30 +111,17 @@ function useHeroEntrance(rootRef) {
         easing: EASE_OUT,
       })
 
-    // Line drawing: bars and baseline, then the sparkline, then edges and nodes.
-    const draw = (el, delay, duration) =>
+    // Portrait rises into its frame while the text stack enters.
+    const portrait = root.querySelector('.landing-portrait')
+    if (portrait)
       run(
-        el,
+        portrait,
         [
-          { strokeDasharray: '1 1', strokeDashoffset: 1 },
-          { strokeDasharray: '1 1', strokeDashoffset: 0 },
+          { opacity: 0, transform: 'translateY(20px)' },
+          { opacity: 1, transform: 'none' },
         ],
-        { duration, delay, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' },
+        { duration: 720, delay: 120, easing: EASE_OUT },
       )
-    root.querySelectorAll('.viz-draw:not(.viz-spark)').forEach((el, i) => {
-      draw(el, 200 + Math.min(i * 24, 240), 700)
-    })
-    root.querySelectorAll('.viz-spark').forEach((el, i) => draw(el, 640 + i * 380, i ? 420 : 800))
-    root.querySelectorAll('.viz-edge').forEach((el, i) => {
-      draw(el, 900 + Math.min(i * 30, 240), 520)
-    })
-    root.querySelectorAll('.viz-node').forEach((el, i) => {
-      run(el, [{ opacity: 0 }, { opacity: 1 }], {
-        duration: 400,
-        delay: 1100 + Math.min(i * 30, 240),
-        easing: 'ease-out',
-      })
-    })
 
     const cancelAll = () => owned.forEach((a) => a.cancel())
     const onChange = () => {
@@ -218,7 +204,15 @@ export default function Landing() {
           </div>
         </div>
         <div className="landing-visual">
-          <LandingViz />
+          <div className="landing-portrait">
+            <img
+              src={PORTRAIT_URL}
+              alt="Bridget Crampton"
+              width="1240"
+              height="1268"
+              fetchPriority="high"
+            />
+          </div>
         </div>
       </div>
     </div>

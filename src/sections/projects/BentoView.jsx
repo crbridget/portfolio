@@ -9,7 +9,8 @@ const CONTAIN_BELOW_RATIO = 1.2
 const CONTAIN_ABOVE_RATIO = 1.8
 
 function BentoCard({ project, index, onOpen }) {
-  const [contain, setContain] = useState(false)
+  // `fit: 'contain'` on a project always shows its whole image.
+  const [contain, setContain] = useState(project.fit === 'contain')
 
   function onImgLoad(e) {
     const { naturalWidth: w, naturalHeight: h } = e.currentTarget
@@ -34,7 +35,7 @@ function BentoCard({ project, index, onOpen }) {
   )
 }
 
-export default function BentoView({ projects, refreshed }) {
+export default function BentoView({ projects }) {
   const [selected, setSelected] = useState(null)
   const triggerRef = useRef(null)
 
@@ -62,11 +63,7 @@ export default function BentoView({ projects, refreshed }) {
 
   return (
     <>
-      {/* key changes with the filtered set so swapped-in cards get the refresh fade */}
-      <div
-        className={`bento-grid${refreshed ? ' is-refreshed' : ''}`}
-        key={projects.map((p) => p.num).join(',')}
-      >
+      <div className="bento-grid">
         {projects.map((p, i) => (
           <BentoCard key={p.title} project={p} index={i} onOpen={open} />
         ))}
