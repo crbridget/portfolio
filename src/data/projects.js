@@ -25,6 +25,10 @@ export const PROJECTS = [
     desc: "Personal project that tracks 11,800+ job postings from 63 companies. A GitHub Actions poller checks Greenhouse and Lever every 30 minutes and stores postings in Postgres (Supabase). I used MiniLM sentence embeddings to rank ~250 internships against my target roles. To match full descriptions to a resume, I split each one into ~150-word chunks to fit within the model's 256-token limit. Built with Flask and React/TypeScript.",
     tags: ['Python', 'Flask', 'React', 'TypeScript', 'PostgreSQL', 'Sentence Embeddings'],
     github: 'https://github.com/crbridget/internship-tracker',
+    links: [
+      { label: 'Live App', url: 'https://internship-tracker-bety.vercel.app/' },
+      { label: 'GitHub', url: 'https://github.com/crbridget/internship-tracker' },
+    ],
     fit: 'contain',
     image: img(
       'internship-tracker.png',
