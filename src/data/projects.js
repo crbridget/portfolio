@@ -66,15 +66,6 @@ export const PROJECTS = [
   },
   {
     num: '05',
-    title: 'Generate Application Portal',
-    category: 'Full Stack',
-    desc: "Built a full-stack application portal for Generate, Northeastern's product development studio, using React, Vite, Clerk, and Supabase. The system supports role-based authentication, configurable application forms, and an admin review dashboard for managing submissions.",
-    tags: ['React', 'Supabase', 'Clerk'],
-    links: [{ label: 'Generate Website', url: 'https://generatenu.com/#directors' }],
-    image: img('application-system-photo.png', 'Application System'),
-  },
-  {
-    num: '06',
     title: 'Constitutional Evolution',
     category: 'NLP',
     desc: 'Developed a Python NLP pipeline to analyze linguistic patterns and thematic similarities across 17 national constitutions spanning 1787 to 1997. Used TF-IDF vectorization and cosine similarity to generate a constitutional similarity matrix, visualized as an interactive heatmap.',
@@ -83,7 +74,7 @@ export const PROJECTS = [
     image: img('constitutional-evolution-photo.png', 'Constitutional Evolution'),
   },
   {
-    num: '07',
+    num: '06',
     title: 'TA Assignment Optimizer',
     category: 'Software Engineering',
     desc: 'Designed an evolutionary computing solution to the TA assignment problem, optimizing pairings between teaching assistants and course sections across competing constraints and preferences. The algorithm uses selection, crossover, and mutation to iteratively improve assignment quality over generations.',
