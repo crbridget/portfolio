@@ -107,8 +107,8 @@ export default function Profile() {
           <div className="about-intro-wrap" data-reveal="rise" data-reveal-delay="80">
             <p className="about-intro">
               I study data science at Northeastern and like work where data turns into a decision
-              someone can act on. Right now that means pricing analytics and deal scoring as a
-              Business Intelligence co-op at Klaviyo, and Bayesian modeling for a health app at
+              someone can act on. Right now that means deal scoring and pricing pipelines as a
+              Business Intelligence co-op at Klaviyo, and backend and LLM work for a health app at
               Remetra.
             </p>
           </div>
